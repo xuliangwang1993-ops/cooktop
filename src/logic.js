@@ -289,6 +289,7 @@ class Component extends DCLogic {
       isNewMeeting: s === 'newMeeting',
       goNewMeeting: () => this.go('newMeeting'),
       startMeeting: () => this.go('mission'),
+      endMeeting: () => this.go('home'), // "End" was a dead control; return to Home safely
       swStart: (e) => this.swipeStart(e),
       swEndTask: (e) => this.swipeEnd(e, 'home'),
       swEndCol: (e) => this.swipeEnd(e, 'tasks'),
