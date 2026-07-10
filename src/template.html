@@ -225,7 +225,7 @@ html,body{margin:0;padding:0;background:#F5F4F1;height:100%;-webkit-font-smoothi
 
   <!-- ============ TASK DETAIL ============ -->
   <sc-if value="{{ isTaskDetail }}" hint-placeholder-val="{{ false }}">
-  <div data-screen-label="Task Detail" ontouchstart="{{ swStart }}" ontouchend="{{ swEndTask }}" style="animation:ctSlideIn .3s cubic-bezier(.2,.8,.3,1);flex:1;overflow-y:auto;background:var(--card);padding:0 20px calc(96px + env(safe-area-inset-bottom))">
+  <div data-screen-label="Task Detail" ontouchstart="{{ swStart }}" ontouchend="{{ swEndTask }}" style="animation:ctSlideIn .3s cubic-bezier(.2,.8,.3,1);flex:1;overflow-y:auto;background:var(--card);padding:0 20px calc(172px + env(safe-area-inset-bottom))">
     <div style="padding-top:calc(14px + env(safe-area-inset-top));display:flex;align-items:center;gap:12px">
       <span onclick="{{ backFromTask }}" style="font-size:15px;color:var(--acfg);font-weight:500;cursor:pointer">‹ Back</span>
     </div>
@@ -253,10 +253,6 @@ html,body{margin:0;padding:0;background:#F5F4F1;height:100%;-webkit-font-smoothi
       <div style="font-size:13.5px;line-height:1.55;margin-top:8px;color:var(--txt);opacity:0.9">Option B chosen unanimously in meeting. ChatGPT verified competitive framing; Gemini's length flag addressed in this revision. Ready for Chairperson sign-off.</div>
     </div>
 
-    <div style="display:flex;gap:10px;margin-top:20px">
-      <span onclick="{{ approveTask }}" style="flex:1;text-align:center;background:{{ approveBg }};color:{{ approveFg }};font-size:15px;font-weight:650;padding:14px;border-radius:100px;cursor:pointer;transition:background .2s">{{ approveLabel }}</span>
-      <span onclick="{{ openReq }}" style="flex:1;text-align:center;background:var(--chip);color:var(--txt);font-size:15px;font-weight:650;padding:14px;border-radius:100px;cursor:pointer">Request changes</span>
-    </div>
     <sc-if value="{{ reqOpen }}" hint-placeholder-val="{{ false }}">
       <div style="animation:ctSlideUp .28s cubic-bezier(.2,.8,.3,1);margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px">
         <div style="font-size:12px;font-weight:650;color:var(--sub);letter-spacing:0.5px">WHAT NEEDS TO CHANGE?</div>
@@ -285,6 +281,12 @@ html,body{margin:0;padding:0;background:#F5F4F1;height:100%;-webkit-font-smoothi
         <span style="color:var(--acfg);font-size:16px">›</span>
       </div>
     </sc-if>
+  </div>
+  <!-- Disposition actions pinned above the tab bar (sibling of the scroll area, anchored to
+       the phone frame) so they stay visible/tappable at any scroll position or viewport height. -->
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:12px 20px calc(80px + env(safe-area-inset-bottom));background:linear-gradient(to top, var(--card) 74%, transparent);display:flex;gap:10px;max-width:430px;margin:0 auto">
+    <span onclick="{{ approveTask }}" style="flex:1;text-align:center;background:{{ approveBg }};color:{{ approveFg }};font-size:15px;font-weight:650;padding:14px;border-radius:100px;cursor:pointer;transition:background .2s">{{ approveLabel }}</span>
+    <span onclick="{{ openReq }}" style="flex:1;text-align:center;background:var(--chip);color:var(--txt);font-size:15px;font-weight:650;padding:14px;border-radius:100px;cursor:pointer">Request changes</span>
   </div>
   </sc-if>
 
