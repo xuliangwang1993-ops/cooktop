@@ -17,6 +17,31 @@ html,body{margin:0;padding:0;background:#F5F4F1;height:100%;-webkit-font-smoothi
 @keyframes ctScreenIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes ctSlideIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
 @keyframes ctSlideUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+/* Bounded mobile scale-down — only at <=430px viewport. Base layout verified stable; this
+   nudges avatars/icons, big headers and section spacing one notch smaller. Body/secondary
+   text (<=20px stays >=13px), the pinned CTA bars and the bottom nav are deliberately untouched.
+   Selectors match the runtime's serialized inline styles ("prop: value; ..."). */
+@media (max-width:430px){
+  /* circular avatars & delegate chips (~-13%); status dots (<=9px) and 20/22px marks left as-is */
+  [style*="width: 46px; height: 46px; border-radius: 50%"]{width:40px!important;height:40px!important}
+  [style*="width: 38px; height: 38px; border-radius: 50%"]{width:34px!important;height:34px!important}
+  [style*="width: 34px; height: 34px; border-radius: 50%"]{width:30px!important;height:30px!important}
+  [style*="width: 30px; height: 30px; border-radius: 50%"]{width:26px!important;height:26px!important}
+  [style*="width: 28px; height: 28px; border-radius: 50%"]{width:24px!important;height:24px!important}
+  [style*="width: 26px; height: 26px; border-radius: 50%"]{width:23px!important;height:23px!important}
+  /* square app-icon tiles */
+  [style*="width: 56px; height: 56px; border-radius: 16px"]{width:48px!important;height:48px!important}
+  [style*="width: 40px; height: 40px; border-radius: 12px"]{width:36px!important;height:36px!important}
+  [style*="width: 34px; height: 34px; border-radius: 10px"]{width:30px!important;height:30px!important}
+  /* big page/section headers: down one notch */
+  [style*="font-size: 26px; font-weight: 700"]{font-size:22px!important}
+  [style*="font-size: 22px; font-weight: 700"]{font-size:20px!important}
+  /* tighten section-header top spacing one notch */
+  [style*="margin: 26px 0px 10px"]{margin-top:20px!important}
+  [style*="margin: 24px 0px 10px"]{margin-top:18px!important}
+  [style*="margin: 24px 0px 8px"]{margin-top:18px!important}
+  [style*="margin: 22px 0px 8px"]{margin-top:18px!important}
+}
 </style>
 </helmet>
 
