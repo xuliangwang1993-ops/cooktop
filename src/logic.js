@@ -1,14 +1,17 @@
 
 class Component extends DCLogic {
   state = { screen: 'home', approved: false, dark: null, colIdx: 0, meetSel: { C: true, G: true, Ge: false, CC: false, D: false, PC: false }, reqOpen: false, reqSent: false, reqSel: 0, promptIdx: 0, ran: false, plugIdx: 0, plugConn: { C: true, G: true, Ge: true, CC: true, D: true, PC: false, MCP: false },
-    // --- Live DeepSeek meeting state (real network, no hard-coded key) ---
+    // --- Live Kimi K3 meeting state (real network, no hard-coded key) ---
     liveMsgs: [], missionInput: '', sending: false, keyTick: 0 };
 
   go(screen) { this.setState({ screen }); }
 
-  // ===================== DeepSeek integration =====================
+  // ===================== Kimi K3 integration =====================
   // Config is read at runtime from localStorage only; no key ever lives in code.
-  DS_KEY_LS = 'cooktop_deepseek_key';
+  // Keys from platform.moonshot.cn use api.moonshot.cn; keys from the
+  // international platform (platform.moonshot.ai) use api.moonshot.ai instead.
+  KIMI_ENDPOINT = 'https://api.moonshot.cn/v1/chat/completions';
+  DS_KEY_LS = 'cooktop_kimi_key';
   DS_WORKER_LS = 'cooktop_worker_url';
 
   dsWorkerUrl() { try { return (localStorage.getItem(this.DS_WORKER_LS) || '').trim(); } catch (e) { return ''; } }
@@ -18,14 +21,14 @@ class Component extends DCLogic {
   dsEnsureKey() {
     let k = this.dsStoredKey();
     if (!k) {
-      k = (window.prompt('Enter your DeepSeek API key (stored only in this browser, never sent to anyone but DeepSeek):') || '').trim();
+      k = (window.prompt('Enter your Kimi (Moonshot) API key (stored only in this browser, never sent to anyone but Moonshot):') || '').trim();
       if (k) { try { localStorage.setItem(this.DS_KEY_LS, k); } catch (e) {} this.setState(st => ({ keyTick: st.keyTick + 1 })); }
     }
     return k;
   }
   dsSetKey() {
     const cur = this.dsStoredKey();
-    const k = (window.prompt('DeepSeek API key (stored only in this browser):', cur) || '').trim();
+    const k = (window.prompt('Kimi (Moonshot) API key (stored only in this browser):', cur) || '').trim();
     if (k) { try { localStorage.setItem(this.DS_KEY_LS, k); } catch (e) {} }
     this.setState(st => ({ keyTick: st.keyTick + 1 }));
   }
@@ -35,7 +38,7 @@ class Component extends DCLogic {
   }
   dsSetWorker() {
     const cur = this.dsWorkerUrl();
-    const u = (window.prompt('Optional Cloudflare Worker proxy URL (leave blank for direct browser → DeepSeek). Example: https://xxx.workers.dev', cur) || '').trim();
+    const u = (window.prompt('Optional Cloudflare Worker proxy URL (leave blank for direct browser → Kimi). Example: https://xxx.workers.dev', cur) || '').trim();
     try { if (u) localStorage.setItem(this.DS_WORKER_LS, u); else localStorage.removeItem(this.DS_WORKER_LS); } catch (e) {}
     this.setState(st => ({ keyTick: st.keyTick + 1 }));
   }
@@ -53,7 +56,7 @@ class Component extends DCLogic {
     if (!text || this.state.sending) return;
 
     const worker = this.dsWorkerUrl();
-    // Direct browser→DeepSeek needs a key; a Worker proxy holds the key server-side.
+    // Direct browser→Kimi needs a key; a Worker proxy holds the key server-side.
     let key = '';
     if (!worker) { key = this.dsEnsureKey(); if (!key) return; }
 
@@ -62,7 +65,7 @@ class Component extends DCLogic {
     this.setState({ liveMsgs: convo, missionInput: '', sending: true });
 
     // Build the OpenAI-compatible message list: meeting context + real transcript so far.
-    const system = 'You are the ChatGPT Delegate (running on DeepSeek) in a live "Cooktop" meeting called "Atlas Launch Review". '
+    const system = 'You are the ChatGPT Delegate (running on Kimi K3) in a live "Cooktop" meeting called "Atlas Launch Review". '
       + 'The current agenda item is the product pricing-page copy. You are one of several AI delegates addressing the room; '
       + 'the human (the Chairperson, initials JP) is speaking to you now. Reply concisely and conversationally, as a delegate would speak in a meeting — a few sentences, no markdown headings.';
     const apiMessages = [{ role: 'system', content: system }];
@@ -72,13 +75,13 @@ class Component extends DCLogic {
     }
 
     try {
-      const endpoint = worker || 'https://api.deepseek.com/chat/completions';
+      const endpoint = worker || this.KIMI_ENDPOINT;
       const headers = { 'Content-Type': 'application/json' };
       if (!worker) headers['Authorization'] = 'Bearer ' + key; // worker injects the key itself
       const res = await fetch(endpoint, {
         method: 'POST',
         headers,
-        body: JSON.stringify({ model: 'deepseek-chat', messages: apiMessages, stream: false }),
+        body: JSON.stringify({ model: 'kimi-k3', messages: apiMessages, stream: false }),
       });
       if (!res.ok) {
         let detail = '';
@@ -86,17 +89,17 @@ class Component extends DCLogic {
         throw new Error('HTTP ' + res.status + (detail ? ' — ' + detail : ''));
       }
       const data = await res.json();
-      const reply = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '(DeepSeek returned an empty reply)';
+      const reply = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '(Kimi returned an empty reply)';
       this.setState(st => ({ liveMsgs: [...st.liveMsgs, { who: 'delegate', text: reply.trim(), time: this.nowTime() }], sending: false }));
     } catch (err) {
       const msg = (err && err.message) || String(err);
       const hint = /Failed to fetch|NetworkError|CORS/i.test(msg)
         ? 'Network/CORS blocked. If this persists, deploy the Cloudflare Worker proxy (see worker/README) and set its URL in Settings.'
         : '';
-      this.setState(st => ({ liveMsgs: [...st.liveMsgs, { who: 'error', text: 'DeepSeek error: ' + msg + (hint ? '  ' + hint : ''), time: this.nowTime() }], sending: false }));
+      this.setState(st => ({ liveMsgs: [...st.liveMsgs, { who: 'error', text: 'Kimi error: ' + msg + (hint ? '  ' + hint : ''), time: this.nowTime() }], sending: false }));
     }
   }
-  // =================== end DeepSeek integration ===================
+  // =================== end Kimi K3 integration ===================
 
   isDark() { return this.state.dark ?? this.props.darkMode ?? false; }
 
@@ -253,7 +256,7 @@ class Component extends DCLogic {
         provenance: 'Generated from repo history via Claude Code · edited by ChatGPT · approved by Chairperson.' },
     ].map((c, i) => ({ ...c, onTap: openCol(i) }));
 
-    // Live DeepSeek transcript rows, pre-styled so the template stays declarative.
+    // Live Kimi transcript rows, pre-styled so the template stays declarative.
     const liveMsgsView = this.state.liveMsgs.map((m) => ({
       ...m,
       isYou: m.who === 'you',
@@ -267,7 +270,7 @@ class Component extends DCLogic {
     const dsWorker = this.dsWorkerUrl();
 
     return {
-      // --- DeepSeek meeting bindings ---
+      // --- Kimi meeting bindings ---
       missionInput: this.state.missionInput,
       missionSending: this.state.sending,
       onMissionInput: (e) => this.onMissionInput(e),
@@ -280,7 +283,7 @@ class Component extends DCLogic {
       setDsKey: () => this.dsSetKey(),
       clearDsKey: () => this.dsClearKey(),
       dsWorkerSet: !!dsWorker,
-      dsWorkerStatus: dsWorker ? dsWorker : 'Direct: browser → DeepSeek',
+      dsWorkerStatus: dsWorker ? dsWorker : 'Direct: browser → Kimi',
       setDsWorker: () => this.dsSetWorker(),
 
       isHome: s === 'home', isMission: s === 'mission', isTasks: s === 'tasks',
