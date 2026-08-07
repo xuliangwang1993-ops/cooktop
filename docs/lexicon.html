@@ -1,5 +1,3 @@
-<!doctype html>
-<html lang="zh-CN">
 <title>轻舞声衣 · 色典</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>
@@ -102,6 +100,18 @@
     padding:14px;font-size:15px;line-height:2;font-weight:550}
   .at-stats{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:8px}
 
+  /* 聊天染色 */
+  .chat{margin-top:24px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .chatwrap{margin-top:12px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px 10px;max-height:420px;overflow-y:auto}
+  .msg{display:flex;margin-top:10px;gap:8px;align-items:flex-start}
+  .msg.right{flex-direction:row-reverse}
+  .msg .who{flex:none;width:34px;height:34px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--sub)}
+  .msg.right .who{background:var(--accent-soft);border-color:var(--accent);color:var(--txt)}
+  .msg .bub{max-width:76%;background:var(--panel2);border:1px solid var(--line);border-radius:12px;
+    padding:9px 12px;font-size:14.5px;line-height:1.8;font-weight:550}
+  .msg.right .bub{background:rgba(79,184,166,.13);border-color:rgba(79,184,166,.4)}
+
   footer{margin-top:28px;font-size:11px;color:var(--faint);line-height:1.7;text-align:center}
   .pref-btn{margin-top:10px;font-family:var(--mono);font-size:10.5px;color:var(--faint);
     background:none;border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer}
@@ -168,6 +178,40 @@
   <p class="at-stats" id="atStats"></p>
 </section>
 
+<section class="chat">
+  <h2 class="at-title">聊天染色 —— 给微信对话穿上情绪的衣裳</h2>
+  <p class="at-desc">在微信里<b>多选复制</b>聊天记录(或手动按"名字:内容"每行一条)贴进来,自动排成对话气泡、按色典给话语染色;<b>导出长图</b>发回微信——一张看得见语气的聊天记录。染色全程本地,内容不上传。</p>
+  <textarea id="chInput" spellcheck="false">妈: 喂,吃了没?我刚炖上汤。
+我: 吃了妈,今天下班早,心里踏实多了。
+妈: 十一你真能回来?我盼望好久了。
+我: 真的,车票都买好了,特别期待见你。
+妈: 那我给你做板栗烧鸡,想想就开心。
+我: 你别太累,我就想喝你熬的小米粥,那种温暖别处没有。
+妈: 你爸腿又疼了,他不肯去医院,我有点担心。
+我: 别急,我回去劝他,他听我的,放心。</textarea>
+  <div class="at-actions">
+    <button class="at-btn main" id="chRun">染色成对话</button>
+    <button class="at-btn" id="chExport" disabled>导出长图</button>
+  </div>
+  <div class="chatwrap" id="chWrap" hidden><div class="chatview" id="chView"></div></div>
+  <p class="at-stats" id="chStats"></p>
+</section>
+
+<section class="chat">
+  <h2 class="at-title">气泡贴图 —— 打一句带情绪的话,贴回对话框</h2>
+  <p class="at-desc">对话框里打不出彩色字?在这里打。选好平台样式,生成一张<b>原生气泡</b>贴图,当图片发进对话——看上去就像你在对话框里直接打出的彩色字。样式按各平台自己发出的气泡配色绘制,图片背景即该平台聊天底色,贴进去浑然一体。</p>
+  <textarea id="stInput" spellcheck="false">十一我真的回来,车票都买好了,特别期待见你!</textarea>
+  <div class="at-actions">
+    <button class="at-btn ph stp" data-st="wechat" aria-pressed="true">微信</button>
+    <button class="at-btn ph stp" data-st="whatsapp" aria-pressed="false">WhatsApp</button>
+    <button class="at-btn ph stp" data-st="messenger" aria-pressed="false">Messenger</button>
+    <button class="at-btn ph stp" data-st="voiceweave" aria-pressed="false">轻舞</button>
+    <button class="at-btn main" id="stRun">生成贴图</button>
+  </div>
+  <img id="stImg" hidden style="max-width:78%;margin-top:12px;border-radius:12px;border:1px solid var(--line);cursor:pointer" alt="气泡贴图预览">
+  <p class="at-stats" id="stStats"></p>
+</section>
+
 <div id="book"></div>
 
 <footer>
@@ -194,12 +238,12 @@ function glow(emo,v){const e=EMO[emo];return "hsla("+e.h+","+e.s+"%,"+(50+v*20).
 
 /* ============ 色典词条(示例批,浓度为占位标定) ============ */
 const BOOK = [
- {emo:"calm", entries:[["淡然",.35],["平静",.4],["舒缓",.42],["平和",.45],["稳妥",.45],["安稳",.5],["恬静",.5],["闲适",.5],["安逸",.5],["安然无恙",.5],["安然",.55],["沉静",.55],["安宁",.55],["悠然",.55],["踏实",.55],["宁静",.6],["静谧",.6],["冷静",.6],["淡定",.6],["心安理得",.6],["风平浪静",.6],["安详",.62],["从容",.65],["泰然",.65],["镇定",.65],["悠然自得",.65],["无波无澜",.65],["岁月静好",.68],["坦然",.7],["心平气和",.7],["安之若素",.7],["神闲气定",.7],["气定神闲",.72],["静水流深",.72],["心静如水",.72],["心如止水",.75],["波澜不惊",.75],["泰然自若",.75],["处变不惊",.78],["释然",.8],["宠辱不惊",.8]]},
- {emo:"hope", entries:[["念想",.5],["守候",.5],["指望",.55],["有盼头",.55],["希望",.6],["期许",.6],["期待",.62],["盼",.65],["心痒",.65],["拭目以待",.68],["心动",.7],["期盼",.7],["翘企",.7],["整装待发",.7],["企盼",.72],["神往",.72],["盼望",.75],["蓄势待发",.75],["心向往之",.75],["巴望",.75],["殷切",.75],["眼巴巴",.78],["向往",.8],["满怀希望",.8],["满心期待",.8],["求知若渴",.8],["引颈而望",.8],["摩拳擦掌",.82],["心驰神往",.82],["憧憬",.85],["翘首以盼",.85],["热望",.85],["朝思暮想",.85],["渴望",.88],["梦寐以求",.88],["望眼欲穿",.9],["跃跃欲试",.9],["迫不及待",.92]]},
- {emo:"warm", entries:[["贴心",.5],["体贴",.55],["体己",.55],["温厚",.6],["陪伴",.6],["暖意",.6],["嘘寒问暖",.62],["关怀",.65],["惦记",.65],["温暖",.65],["关爱",.65],["暖心",.65],["温情",.68],["爱护",.68],["窝心",.68],["温柔",.7],["呵护",.7],["珍惜",.7],["温存",.7],["温言软语",.7],["相偎",.7],["亲密",.7],["相守",.72],["亲昵",.72],["依偎",.75],["心疼",.75],["怜爱",.75],["柔情",.75],["慈爱",.75],["疼惜",.78],["眷恋",.8],["珍爱",.8],["恩爱",.8],["情意绵绵",.8],["呵护备至",.8],["深情",.82],["相拥",.82],["疼爱",.85],["如沐春风",.85],["母爱",.85],["情深意长",.85],["相依为命",.88],["相濡以沫",.88],["拥抱",.9]]},
- {emo:"joy",  entries:[["舒畅",.6],["愉快",.65],["欣然",.65],["神清气爽",.68],["愉悦",.68],["开心",.7],["高兴",.7],["甜丝丝",.7],["快活",.72],["乐呵呵",.72],["心旷神怡",.72],["得意",.72],["欢喜",.75],["快乐",.75],["喜悦",.75],["欢快",.75],["美滋滋",.75],["欢乐",.78],["喜滋滋",.78],["春风得意",.8],["甜蜜",.8],["欣喜",.8],["痛快",.8],["畅快",.85],["兴高采烈",.85],["眉飞色舞",.85],["喜上眉梢",.85],["笑逐颜开",.85],["兴奋",.85],["欢腾",.88],["酣畅淋漓",.88],["乐开花",.88],["雀跃",.9],["手舞足蹈",.9],["眉开眼笑",.9],["乐不可支",.9],["大喜过望",.9],["惊喜",.92],["喜出望外",.92],["欢呼雀跃",.92],["灿烂",.95],["心花怒放",.95],["欣喜若狂",.96]]},
- {emo:"sad",  entries:[["惆怅",.55],["郁闷",.55],["低落",.58],["孤单",.6],["失落",.6],["忧郁",.6],["消沉",.6],["愁绪",.6],["惘然",.6],["忧愁",.62],["寂寥",.62],["哀愁",.65],["难过",.65],["黯然",.65],["忧伤",.65],["落寞",.65],["怅然若失",.68],["沮丧",.68],["孤寂",.68],["委屈",.7],["感伤",.7],["形单影只",.7],["辛酸",.72],["触景伤情",.72],["思念",.75],["物是人非",.75],["伤心",.75],["凄然",.75],["心酸",.75],["黯然神伤",.75],["睹物思人",.75],["遗憾",.78],["凄凉",.78],["哀伤",.78],["悲伤",.8],["悲凉",.8],["酸楚",.85],["哽咽",.85],["悲切",.85],["痛心",.85],["潸然泪下",.88],["哀痛",.88],["泪",.9],["悲痛",.9],["心如刀割",.95],["泣不成声",.95],["万念俱灰",.97],["心碎",.98],["肝肠寸断",.98]]},
- {emo:"tense",entries:[["顾虑",.55],["欲言又止",.55],["不安",.6],["担心",.6],["局促",.6],["担忧",.65],["忧虑",.65],["局促不安",.68],["屏息",.7],["紧张",.7],["惴惴",.7],["忐忑",.72],["心神不宁",.72],["屏气敛息",.72],["七上八下",.75],["惴惴不安",.75],["焦虑",.75],["急躁",.75],["大气不敢出",.78],["心慌",.8],["坐立不安",.8],["手足无措",.8],["焦躁",.8],["心乱如麻",.8],["迫在眉睫",.8],["慌乱",.82],["如临大敌",.82],["慌张",.85],["提心吊胆",.85],["六神无主",.85],["战战兢兢",.85],["草木皆兵",.85],["如坐针毡",.88],["惊慌",.88],["心惊肉跳",.88],["大惊失色",.9],["火烧眉毛",.9],["焦灼",.92],["胆战心惊",.92],["惊慌失措",.92],["千钧一发",.92],["心急如焚",.95],["惊惶",.96]]},
+ {emo:"calm",  entries:[["淡然",.35],["平缓",.4],["平静",.4],["舒缓",.42],["平和",.45],["平稳",.45],["稳定",.45],["稳妥",.45],["顺利",.48],["安顿",.5],["安然无恙",.5],["安稳",.5],["安逸",.5],["放心",.5],["恬静",.5],["稳当",.5],["闲适",.5],["安宁",.55],["安然",.55],["安心",.55],["沉静",.55],["放松",.55],["轻松",.55],["舒坦",.55],["踏实",.55],["悠然",.55],["悠闲",.55],["淡定",.6],["定心",.6],["风平浪静",.6],["静谧",.6],["冷静",.6],["宁静",.6],["舒心",.6],["心安",.6],["心安理得",.6],["心里有底",.6],["自在",.6],["安详",.62],["沉着",.65],["从容",.65],["松了口气",.65],["泰然",.65],["无波无澜",.65],["无忧无虑",.65],["悠然自得",.65],["镇定",.65],["镇静",.65],["岁月静好",.68],["安之若素",.7],["从容不迫",.7],["神闲气定",.7],["坦然",.7],["心平气和",.7],["静水流深",.72],["气定神闲",.72],["心静如水",.72],["波澜不惊",.75],["如释重负",.75],["泰然自若",.75],["心如止水",.75],["处变不惊",.78],["宠辱不惊",.8],["释然",.8]]},
+ {emo:"hope",  entries:[["念想",.5],["守候",.5],["有盼头",.55],["有望",.55],["展望",.55],["指望",.55],["加油",.6],["看好",.6],["理想",.6],["期望",.6],["期许",.6],["希望",.6],["心愿",.6],["信心",.6],["愿望",.6],["祝愿",.6],["期待",.62],["乐观",.65],["盼",.65],["盼着",.65],["心痒",.65],["信念",.65],["有信心",.65],["拭目以待",.68],["希冀",.68],["大有可为",.7],["梦想",.7],["期盼",.7],["祈盼",.7],["翘企",.7],["心动",.7],["整装待发",.7],["指日可待",.7],["企盼",.72],["神往",.72],["巴望",.75],["盼望",.75],["期待已久",.75],["前途光明",.75],["心向往之",.75],["蓄势待发",.75],["殷切",.75],["充满希望",.78],["满怀期待",.78],["眼巴巴",.78],["满怀希望",.8],["满心期待",.8],["求知若渴",.8],["向往",.8],["引颈而望",.8],["摩拳擦掌",.82],["翘首期盼",.82],["心驰神往",.82],["朝思暮想",.85],["憧憬",.85],["盼星星盼月亮",.85],["翘首以盼",.85],["热望",.85],["渴望",.88],["梦寐以求",.88],["望眼欲穿",.9],["跃跃欲试",.9],["迫不及待",.92]]},
+ {emo:"warm",  entries:[["贴心",.5],["和气",.55],["暖",.55],["体己",.55],["体贴",.55],["照顾",.55],["安慰",.6],["感谢",.6],["关心",.6],["和睦",.6],["美好",.6],["暖意",.6],["陪伴",.6],["亲切",.6],["善意",.6],["体谅",.6],["温厚",.6],["温润",.6],["心意",.6],["友爱",.6],["嘘寒问暖",.62],["惦记",.65],["抚慰",.65],["关爱",.65],["关怀",.65],["暖心",.65],["情谊",.65],["温暖",.65],["温馨",.65],["友情",.65],["爱护",.68],["爱意",.68],["慰藉",.68],["温情",.68],["窝心",.68],["心暖",.68],["感动",.7],["感恩",.7],["感激",.7],["呵护",.7],["亲密",.7],["亲情",.7],["温存",.7],["温柔",.7],["温言软语",.7],["相偎",.7],["珍惜",.7],["亲昵",.72],["相守",.72],["慈爱",.75],["怜爱",.75],["柔情",.75],["心疼",.75],["依偎",.75],["疼惜",.78],["恩爱",.8],["呵护备至",.8],["眷恋",.8],["情意绵绵",.8],["深情厚谊",.8],["珍爱",.8],["深情",.82],["相拥",.82],["母爱",.85],["情深意长",.85],["如沐春风",.85],["疼爱",.85],["相濡以沫",.88],["相依为命",.88],["拥抱",.9]]},
+ {emo:"joy",   entries:[["微笑",.55],["满意",.6],["满足",.6],["热闹",.6],["舒畅",.6],["喜欢",.6],["兴致",.6],["津津有味",.65],["精彩",.65],["喜爱",.65],["笑容",.65],["欣然",.65],["欣慰",.65],["愉快",.65],["神清气爽",.68],["愉悦",.68],["高兴",.7],["哈哈",.7],["骄傲",.7],["开心",.7],["甜丝丝",.7],["喜庆",.7],["沾沾自喜",.7],["自豪",.7],["得意",.72],["快活",.72],["乐呵呵",.72],["乐在其中",.72],["心旷神怡",.72],["大笑",.75],["欢快",.75],["欢喜",.75],["欢笑",.75],["欢欣",.75],["开怀",.75],["快乐",.75],["美滋滋",.75],["喜悦",.75],["兴致勃勃",.75],["欢乐",.78],["皆大欢喜",.78],["喜滋滋",.78],["心满意足",.78],["春风得意",.8],["得偿所愿",.8],["甜蜜",.8],["痛快",.8],["欣喜",.8],["幸福",.8],["喜气洋洋",.82],["畅快",.85],["开怀大笑",.85],["眉飞色舞",.85],["捧腹大笑",.85],["喜上眉梢",.85],["笑逐颜开",.85],["兴奋",.85],["兴高采烈",.85],["酣畅淋漓",.88],["欢腾",.88],["乐开花",.88],["大喜过望",.9],["乐不可支",.9],["眉开眼笑",.9],["雀跃",.9],["手舞足蹈",.9],["欢呼雀跃",.92],["惊喜",.92],["喜出望外",.92],["灿烂",.95],["心花怒放",.95],["欣喜若狂",.96]]},
+ {emo:"sad",   entries:[["惆怅",.55],["可惜",.55],["冷清",.55],["叹气",.55],["无奈",.55],["郁闷",.55],["低落",.58],["悲观",.6],["愁绪",.6],["孤单",.6],["失落",.6],["惘然",.6],["消沉",.6],["萧瑟",.6],["忧郁",.6],["寂寥",.62],["寂寞",.62],["忧愁",.62],["哀愁",.65],["黯然",.65],["别离",.65],["孤独",.65],["灰心",.65],["离别",.65],["落寞",.65],["难过",.65],["失望",.65],["失意",.65],["惋惜",.65],["想家",.65],["忧伤",.65],["怅然若失",.68],["孤寂",.68],["沮丧",.68],["苍凉",.7],["感伤",.7],["苦涩",.7],["委屈",.7],["乡愁",.7],["形单影只",.7],["触景伤情",.72],["心凉",.72],["辛酸",.72],["哀思",.75],["黯然神伤",.75],["悼念",.75],["睹物思人",.75],["哭",.75],["凄然",.75],["忍痛",.75],["伤心",.75],["思念",.75],["物是人非",.75],["心酸",.75],["眼泪",.75],["哀伤",.78],["凄凉",.78],["遗憾",.78],["悲哀",.8],["悲凉",.8],["悲伤",.8],["哭泣",.8],["落泪",.8],["心痛",.8],["悲惨",.82],["流泪",.82],["凄惨",.82],["痛苦",.82],["悲切",.85],["沉痛",.85],["哽咽",.85],["诀别",.85],["酸楚",.85],["痛失",.85],["痛心",.85],["心灰意冷",.85],["哀痛",.88],["潸然泪下",.88],["悲痛",.9],["泪",.9],["绝望",.92],["生离死别",.92],["泣不成声",.95],["心如刀割",.95],["万念俱灰",.97],["肝肠寸断",.98],["心碎",.98]]},
+ {emo:"tense", entries:[["顾虑",.55],["压力",.55],["欲言又止",.55],["不安",.6],["吃惊",.6],["担心",.6],["烦恼",.6],["烦心",.6],["惊讶",.6],["局促",.6],["心里没底",.6],["心虚",.6],["担忧",.65],["胆怯",.65],["怯场",.65],["心烦",.65],["忧虑",.65],["忧心",.65],["紧绷",.68],["局促不安",.68],["烦躁",.7],["害怕",.7],["急切",.7],["紧迫",.7],["紧张",.7],["屏息",.7],["着急",.7],["惴惴",.7],["屏气敛息",.72],["忐忑",.72],["心急",.72],["心神不宁",.72],["措手不及",.75],["哆嗦",.75],["发慌",.75],["急躁",.75],["焦虑",.75],["惊愕",.75],["七上八下",.75],["畏惧",.75],["悬着心",.75],["惴惴不安",.75],["大气不敢出",.78],["焦急",.78],["揪心",.78],["目瞪口呆",.78],["心烦意乱",.78],["夜不能寐",.78],["忧心忡忡",.78],["震惊",.78],["颤抖",.8],["发抖",.8],["慌里慌张",.8],["焦躁",.8],["惊悚",.8],["惊吓",.8],["迫在眉睫",.8],["手足无措",.8],["心慌",.8],["心乱如麻",.8],["坐立不安",.8],["坐卧不宁",.8],["慌乱",.82],["恐惧",.82],["寝食难安",.82],["如临大敌",.82],["吓坏",.82],["草木皆兵",.85],["慌张",.85],["火急火燎",.85],["急死了",.85],["惊恐",.85],["恐慌",.85],["六神无主",.85],["燃眉之急",.85],["提心吊胆",.85],["危急",.85],["战战兢兢",.85],["惊慌",.88],["如坐针毡",.88],["心惊肉跳",.88],["大惊失色",.9],["火烧眉毛",.9],["胆战心惊",.92],["焦灼",.92],["惊慌失措",.92],["千钧一发",.92],["心急如焚",.95],["惊惶",.96]]},
 ];
 const COMPOUND = [
  ["口是心非",   "calm","tense","sweep",.6],
@@ -517,6 +561,216 @@ function quizAnswer(k,btn){
 document.getElementById("qNext").addEventListener("click",quizNew);
 quizNew();
 
+/* ---------- 聊天染色:微信/WhatsApp/Messenger 对话 → 情绪气泡 → 长图 ---------- */
+function parseChat(text){
+  const lines=text.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+  const msgs=[]; const order=[];
+  for(let raw of lines){
+    raw=raw.replace(/^\[?\d{1,4}[\/\-.年]\d{1,2}[\/\-.月]?\d{0,4}日?[,,]?\s*(上午|下午)?\d{1,2}:\d{2}(:\d{2})?\]?\s*[-–—]?\s*/,"");
+    const m=raw.match(/^([^::]{1,20})[::]\s*(.+)$/);
+    if(m){
+      const who=m[1].trim();
+      if(!order.includes(who)) order.push(who);
+      msgs.push({who,text:m[2].trim()});
+    }else if(msgs.length){ msgs[msgs.length-1].text+=" "+raw; }
+    else msgs.push({who:"?",text:raw});
+  }
+  const rightWho=order.find(w=>/^(我|me|Me|ME)$/.test(w)) ?? order[1];
+  msgs.forEach(g=>g.side=(g.who===rightWho)?"right":"left");
+  return msgs;
+}
+/* 每条消息 = 一段(§8.6):典中词着色;有命中则中性字取段位色;无命中保持墨色 */
+function msgParts(text){
+  const toks=tokenize(text);
+  const score={};let sum=0,n=0;
+  toks.forEach(t=>{if(t.d){score[t.d.emo]=(score[t.d.emo]||0)+t.d.v;sum+=t.d.v;n++;}});
+  const segEmo=Object.keys(score).sort((a,b)=>score[b]-score[a])[0]||null;
+  const segV=n?sum/n:0;
+  return {toks,segEmo,segV,hits:n};
+}
+function neutralV2(v){return Math.min(1,0.12+0.38*v);}
+let chMsgs=null;
+function chRun(){
+  chMsgs=parseChat(document.getElementById("chInput").value);
+  const view=document.getElementById("chView"); view.innerHTML="";
+  let hits=0;
+  chMsgs.forEach(g=>{
+    const p=msgParts(g.text); hits+=p.hits; g.p=p;
+    const d=document.createElement("div"); d.className="msg "+g.side;
+    const body=p.toks.map(tk=>{
+      if(tk.d) return wordHTML(tk.t,tk.d.emo,tk.d.v,tk.d.sub||null,tk.d.fx||null,false);
+      if(p.segEmo) return '<span style="color:'+col(p.segEmo,neutralV2(p.segV))+'">'+tk.t+'</span>';
+      return '<span style="color:var(--sub)">'+tk.t+'</span>';
+    }).join("");
+    d.innerHTML='<span class="who">'+[...g.who][0]+'</span><span class="bub">'+body+'</span>';
+    view.appendChild(d);
+  });
+  document.getElementById("chWrap").hidden=false;
+  document.getElementById("chStats").textContent=
+    "共 "+chMsgs.length+" 条消息 · 典中情绪词 "+hits+" 处 · 支持微信多选复制 / WhatsApp 导出格式(时间戳自动剥离)";
+  document.getElementById("chExport").disabled=false;
+}
+/* 导出长图:750 宽,暗底品牌卡,逐字着色,末尾落款 */
+function chExport(){
+  const W=750,PAD=28,BUBMAX=520,FS=27,LH=44,AV=52;
+  const cv=document.createElement("canvas");const g=cv.getContext("2d");
+  g.font="600 "+FS+"px 'PingFang SC','Microsoft YaHei',sans-serif";
+  function wrap(toks,seg){
+    const chars=[];
+    toks.forEach(tk=>{
+      const c=tk.d?null:(seg.segEmo?col2hex(seg.segEmo,neutralV2(seg.segV)):"#A79FB4");
+      if(tk.d){
+        const cs=charCols(tk.t,tk.d);
+        [...tk.t].forEach((ch,i)=>chars.push([ch,cs[i]]));
+      } else [...tk.t].forEach(ch=>chars.push([ch,c]));
+    });
+    const lines=[[]];let w=0;
+    chars.forEach(([ch,c])=>{
+      const cw=g.measureText(ch).width;
+      if(w+cw>BUBMAX&&lines[lines.length-1].length){lines.push([]);w=0;}
+      lines[lines.length-1].push([ch,c]);w+=cw;
+    });
+    return lines;
+  }
+  function col2hex(emo,v){const e=EMO[emo];const w=Math.max(.06,Math.min(1,v));
+    return hsl2hex(e.h,e.s*(0.45+0.55*w),26+w*58);}
+  function hsl2hex(h,s,l){s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l);
+    const f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));
+    return "#"+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,"0")).join("");}
+  function charCols(word,d){
+    const n=[...word].length,out=[];
+    for(let i=0;i<n;i++){
+      if(d.sub){const a=EMO[d.emo],b=EMO[d.sub];const m=n>1?i/(n-1):0.5;
+        let dh=b.h-a.h;if(dh>180)dh-=360;if(dh<-180)dh+=360;
+        const w=Math.max(.06,Math.min(1,d.v));
+        out.push(hsl2hex(a.h+dh*m,(a.s+(b.s-a.s)*m)*(0.45+0.55*w),26+w*58));}
+      else out.push(col2hex(d.emo,d.v));
+    }
+    return out;
+  }
+  const blocks=chMsgs.map(gm=>({gm,lines:wrap(gm.p.toks,gm.p)}));
+  const headH=104,footH=88;
+  const H=headH+footH+blocks.reduce((a,b)=>a+b.lines.length*LH+30,0)+PAD;
+  cv.width=W;cv.height=H;
+  g.fillStyle="#141019";g.fillRect(0,0,W,H);
+  const COL6=["#4FB8A6","#7FB85E","#E0A96B","#F0C24A","#7086DA","#E0704E"];
+  COL6.forEach((c,i)=>{g.fillStyle=c;g.fillRect(PAD+i*(W-2*PAD)/6,PAD,(W-2*PAD)/6,6);});
+  g.font="700 30px 'PingFang SC',sans-serif";g.fillStyle="#EFEAF3";
+  g.fillText("轻舞声衣 · 聊天染色",PAD,PAD+52);
+  let y=headH;
+  g.font="600 "+FS+"px 'PingFang SC','Microsoft YaHei',sans-serif";
+  blocks.forEach(({gm,lines})=>{
+    const bw=Math.min(BUBMAX,Math.max(...lines.map(l=>l.reduce((a,[ch])=>a+g.measureText(ch).width,0))))+36;
+    const bh=lines.length*LH+22;
+    const right=gm.side==="right";
+    const bx=right?W-PAD-AV-10-bw:PAD+AV+10;
+    g.fillStyle=right?"#1C2B28":"#241E2E";
+    g.strokeStyle=right?"#4FB8A6":"#352C42";
+    g.beginPath();g.roundRect(bx,y,bw,bh,12);g.fill();g.stroke();
+    g.fillStyle=right?"#20332F":"#2A2435";
+    g.beginPath();g.roundRect(right?W-PAD-AV:PAD,y,AV,AV,10);g.fill();
+    g.fillStyle="#A79FB4";g.font="700 24px 'PingFang SC',sans-serif";
+    g.fillText([...gm.who][0],(right?W-PAD-AV:PAD)+14,y+34);
+    g.font="600 "+FS+"px 'PingFang SC','Microsoft YaHei',sans-serif";
+    lines.forEach((line,li)=>{
+      let x=bx+18;
+      line.forEach(([ch,c])=>{g.fillStyle=c||"#A79FB4";g.fillText(ch,x,y+34+li*LH);x+=g.measureText(ch).width;});
+    });
+    y+=bh+30;
+  });
+  g.font="500 20px ui-monospace,Menlo,monospace";g.fillStyle="#6C6379";
+  g.fillText("VOICEWEAVE · 给文字穿上情感的衣裳 · 色典 v0.4-sample",PAD,H-40);
+  const url=cv.toDataURL("image/png");
+  const a=document.createElement("a");a.href=url;a.download="轻舞声衣-聊天染色.png";a.click();
+  let img=document.getElementById("chImg");
+  if(!img){img=document.createElement("img");img.id="chImg";
+    img.style.cssText="width:100%;margin-top:10px;border-radius:12px;border:1px solid var(--line)";
+    document.getElementById("chWrap").after(img);}
+  img.src=url;
+  document.getElementById("chStats").textContent="长图已生成(下方预览)——手机上长按图片即可保存/转发到微信、WhatsApp";
+}
+document.getElementById("chRun").addEventListener("click",chRun);
+document.getElementById("chExport").addEventListener("click",chExport);
+
+/* ---------- 气泡贴图:在这里打字 → 平台原生样式气泡图 → 贴回对话框 ----------
+   自己发出的气泡配色:微信 #95EC69 / WhatsApp #D9FDD3 / Messenger #0084FF;
+   图片背景 = 各平台聊天底色,贴进对话视觉上与原生气泡一致(§8.5 双底色:
+   浅色气泡用纸面 profile 浓=深,深色气泡用亮字 profile)。 */
+const ST_STYLES={
+  wechat:{label:"微信",chatBg:"#EDEDED",bub:"#95EC69",ink:"#191919",radius:8,profile:"paper",tail:true},
+  whatsapp:{label:"WhatsApp",chatBg:"#EFE7DD",bub:"#D9FDD3",ink:"#111B21",radius:12,profile:"paper",tail:true},
+  messenger:{label:"Messenger",chatBg:"#FFFFFF",bub:"#0084FF",ink:"#FFFFFF",radius:20,profile:"bright",tail:false},
+  voiceweave:{label:"轻舞声衣",chatBg:"#141019",bub:"#1C2B28",ink:"#EFEAF3",radius:12,profile:"dark",tail:false,border:"#4FB8A6"}
+};
+let stCur="wechat";
+document.querySelectorAll(".stp").forEach(b=>b.addEventListener("click",()=>{
+  stCur=b.dataset.st;
+  document.querySelectorAll(".stp").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+  if(!document.getElementById("stImg").hidden)stRun();
+}));
+function stHsl2hex(h,s,l){s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l);
+  const f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));
+  return "#"+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,"0")).join("");}
+function stL(profile,w){
+  if(profile==="paper")return 52-w*26;
+  if(profile==="bright")return 95-w*14;
+  return 26+w*58;
+}
+function stCol(emo,v,profile){const e=EMO[emo];const w=Math.max(.06,Math.min(1,v));
+  return stHsl2hex(e.h,Math.min(100,e.s*(0.75+0.35*w)),stL(profile,w));}
+function stCharCols(word,d,profile){
+  const n=[...word].length,out=[];const w=Math.max(.06,Math.min(1,d.v));
+  for(let i=0;i<n;i++){
+    if(d.sub){const a=EMO[d.emo],b=EMO[d.sub];const m=n>1?i/(n-1):0.5;
+      let dh=b.h-a.h;if(dh>180)dh-=360;if(dh<-180)dh+=360;
+      out.push(stHsl2hex(a.h+dh*m,Math.min(100,(a.s+(b.s-a.s)*m)*(0.75+0.35*w)),stL(profile,w)));}
+    else out.push(stCol(d.emo,d.v,profile));
+  }
+  return out;
+}
+function stRun(){
+  const text=document.getElementById("stInput").value.trim();
+  if(!text)return;
+  const S=ST_STYLES[stCur];
+  const p=msgParts(text);
+  const SC=2,FS=34,LH=52,MAXW=440,PADX=24,PADY=15,MARG=26;
+  const cv=document.createElement("canvas");const g=cv.getContext("2d");
+  g.font="500 "+FS+"px 'PingFang SC','Microsoft YaHei',sans-serif";
+  const chars=[];
+  p.toks.forEach(tk=>{
+    if(tk.d){const cs=stCharCols(tk.t,tk.d,S.profile);[...tk.t].forEach((ch,i)=>chars.push([ch,cs[i]]));}
+    else [...tk.t].forEach(ch=>chars.push([ch,S.ink]));
+  });
+  const lines=[[]];let w=0;
+  chars.forEach(([ch,c])=>{const cw=g.measureText(ch).width;
+    if(w+cw>MAXW&&lines[lines.length-1].length){lines.push([]);w=0;}
+    lines[lines.length-1].push([ch,c]);w+=cw;});
+  const tw=Math.max(...lines.map(l=>l.reduce((a,[ch])=>a+g.measureText(ch).width,0)));
+  const bw=tw+PADX*2,bh=lines.length*LH+PADY*2;
+  const W=bw+MARG*2+(S.tail?8:0),H=bh+MARG*2;
+  cv.width=W*SC;cv.height=H*SC;g.scale(SC,SC);
+  g.fillStyle=S.chatBg;g.fillRect(0,0,W,H);
+  const bx=MARG,by=MARG;
+  g.fillStyle=S.bub;
+  g.beginPath();g.roundRect(bx,by,bw,bh,S.radius);g.fill();
+  if(S.border){g.strokeStyle=S.border;g.lineWidth=1.5;g.stroke();}
+  if(S.tail){
+    g.beginPath();g.moveTo(bx+bw-1,by+16);g.lineTo(bx+bw+8,by+23);g.lineTo(bx+bw-1,by+30);
+    g.closePath();g.fillStyle=S.bub;g.fill();
+  }
+  g.font="500 "+FS+"px 'PingFang SC','Microsoft YaHei',sans-serif";
+  g.textBaseline="middle";
+  lines.forEach((line,li)=>{let x=bx+PADX;const yy=by+PADY+li*LH+LH/2+2;
+    line.forEach(([ch,c])=>{g.fillStyle=c;g.fillText(ch,x,yy);x+=g.measureText(ch).width;});});
+  g.textBaseline="alphabetic";
+  const url=cv.toDataURL("image/png");
+  const img=document.getElementById("stImg");img.src=url;img.hidden=false;
+  document.getElementById("stStats").textContent=
+    S.label+" 样式贴图已生成 · "+p.hits+" 处情绪词着色 · 手机长按保存,当图片发进对话即可;点图片可下载";
+  img.onclick=()=>{const a=document.createElement("a");a.href=url;a.download="轻舞声衣-气泡-"+stCur+".png";a.click();};
+}
+document.getElementById("stRun").addEventListener("click",stRun);
+
 /* ---------- 启动礼仪(§9.4):首访完整织线,再访短签名 1.2s,可跳可关 ----------
    自动播放的启动动画一律无声(浏览器自动播放策略 + 礼貌);声音签名只在
    用户主动交互的场景(品牌页 tap-to-play、词条点击)出现。 */
@@ -566,5 +820,3 @@ quizNew();
   if(sk) sk.addEventListener("click",done);
 })();
 </script>
-
-</html>
