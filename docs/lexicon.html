@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="zh-CN">
+<title>轻舞声衣 · 色典</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<style>
+  :root{
+    --bg:#141019; --panel:#1E1926; --panel2:#261F30; --line:#352C42;
+    --txt:#EFEAF3; --sub:#A79FB4; --faint:#6C6379;
+    --accent:#4FB8A6; --accent-soft:rgba(79,184,166,.16);
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --ui:"PingFang SC","HarmonyOS Sans SC",system-ui,-apple-system,"Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--txt);font-family:var(--ui);-webkit-font-smoothing:antialiased}
+  body{max-width:520px;margin:0 auto;min-height:100dvh;padding:0 20px calc(40px + env(safe-area-inset-bottom))}
+  .cap{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--faint);font-weight:600}
+  header{padding-top:calc(30px + env(safe-area-inset-top))}
+  .brand{display:flex;align-items:baseline;gap:10px}
+  .brand h1{font-size:24px;font-weight:700;letter-spacing:.5px}
+  .brand .v{font-size:11px;color:var(--faint);font-family:var(--mono)}
+  .tagline{margin-top:8px;font-size:13px;color:var(--sub);line-height:1.65}
+  .tagline b{color:var(--txt);font-weight:600}
+
+  /* 活字 */
+  .ch{display:inline-block;color:var(--c);text-shadow:0 0 var(--gr,8px) var(--gc,transparent);
+    animation:shimmer var(--sp,4s) ease-in-out infinite;animation-delay:var(--dl,0s)}
+  @keyframes shimmer{0%,100%{filter:brightness(var(--lo,1))}50%{filter:brightness(var(--hi,1))}}
+  .fx-sweep{animation:shimmer var(--sp,4s) ease-in-out infinite, sweepcol var(--sw,4.5s) linear infinite;
+    animation-delay:var(--dl,0s),var(--dl2,0s)}
+  @keyframes sweepcol{0%,64%,100%{color:var(--c)}76%{color:var(--c2);text-shadow:0 0 18px var(--gc2)}88%{color:var(--c)}}
+  .fx-undertow{animation:shimmer var(--sp,4s) ease-in-out infinite, undertow var(--usp,6s) ease-in-out infinite;
+    animation-delay:var(--dl,0s),var(--dl4,0s)}
+  @keyframes undertow{0%,100%{text-shadow:0 0 5px var(--gc2)}50%{text-shadow:0 0 22px var(--gc2)}}
+  .fx-tremor{animation:shimmer var(--sp,4s) ease-in-out infinite, tremor .38s steps(2,end) infinite;
+    animation-delay:var(--dl,0s),var(--dl3,0s)}
+  @keyframes tremor{25%{transform:translate(.6px,-.4px);filter:brightness(1.18)}75%{transform:translate(-.6px,.3px);filter:brightness(.88)}}
+
+  /* 读出卡 */
+  .readout{margin-top:16px;background:linear-gradient(165deg,var(--panel2),var(--panel));
+    border:1px solid var(--line);border-radius:18px;padding:16px 18px;position:relative;overflow:hidden;
+    box-shadow:0 18px 44px -32px var(--accent);transition:box-shadow .6s;min-height:118px}
+  .readout::before{content:"";position:absolute;inset:-40% -10% auto;height:110px;
+    background:radial-gradient(60% 100% at 50% 0%,var(--accent-soft),transparent 70%);pointer-events:none;transition:background .6s}
+  .ro-word{font-size:38px;font-weight:700;letter-spacing:3px;line-height:1.3;position:relative}
+  .ro-word.idle{font-size:15px;font-weight:400;color:var(--faint);letter-spacing:.5px;padding-top:8px}
+  .ro-meta{margin-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--sub);position:relative;min-height:16px}
+  .ro-meta b{color:var(--txt);font-weight:600}
+
+  /* 读典法 */
+  .rules{margin-top:14px;background:var(--panel);border:1px dashed var(--line);border-radius:12px;
+    padding:11px 14px;font-size:11.5px;color:var(--sub);line-height:1.75}
+  .rules b{color:var(--txt)}
+
+  /* 测验 */
+  .quiz{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .quiz h2{font-size:13px;font-weight:600;color:var(--sub);letter-spacing:.06em}
+  .quiz .q{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+  .quiz .blocks{font-size:34px;font-weight:800;letter-spacing:4px}
+  .quiz .score{font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .quiz .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .quiz .opt{font-family:var(--ui);font-size:12.5px;color:var(--sub);background:var(--panel2);border:1px solid var(--line);
+    padding:7px 14px;border-radius:100px;cursor:pointer;transition:.15s}
+  .quiz .opt.right{color:#141019;background:var(--accent);border-color:var(--accent);font-weight:650}
+  .quiz .opt.wrong{color:var(--faint);border-color:#E0704E;text-decoration:line-through}
+  .quiz .verdict{margin-top:10px;font-size:12.5px;color:var(--sub);min-height:18px}
+  .quiz .verdict b{color:var(--txt)}
+  .quiz .next{margin-top:10px;font-size:12.5px;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:650;padding:4px 0}
+  .quiz p.hint{font-size:11px;color:var(--faint);margin-top:6px;line-height:1.6}
+
+  /* 部 */
+  .radical{margin-top:24px}
+  .rad-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+  .rad-head .dot{width:10px;height:10px;border-radius:50%;flex:none;align-self:center}
+  .rad-head h2{font-size:15px;font-weight:700;letter-spacing:1px}
+  .rad-head span{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  .entries{display:flex;flex-wrap:wrap;gap:8px}
+  .entry{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 13px;
+    cursor:pointer;transition:.15s;display:flex;align-items:baseline;gap:7px}
+  .entry:active{transform:scale(.96)}
+  .entry.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .entry .w{font-size:16.5px;font-weight:650;letter-spacing:1px}
+  .entry .v{font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+  .entry:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* 着色工坊 */
+  .atelier{margin-top:24px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .at-title{font-size:13px;font-weight:600;color:var(--sub);letter-spacing:.06em}
+  .at-desc{font-size:11.5px;color:var(--faint);line-height:1.7;margin-top:4px}
+  .at-desc b{color:var(--txt)}
+  textarea{width:100%;margin-top:10px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;
+    color:var(--txt);font-family:var(--ui);font-size:14px;line-height:1.7;padding:12px;resize:vertical;min-height:96px}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .at-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .at-btn{font-family:var(--ui);font-size:12.5px;font-weight:600;color:var(--sub);background:var(--panel2);
+    border:1px solid var(--line);border-radius:10px;padding:9px 14px;cursor:pointer;transition:.15s}
+  .at-btn.main{color:#141019;background:var(--accent);border-color:var(--accent)}
+  .at-btn.ph[aria-pressed="true"]{color:var(--txt);border-color:var(--accent);background:var(--accent-soft)}
+  .at-btn:disabled{opacity:.4;cursor:default}
+  .at-btn:active{transform:translateY(1px)}
+  .at-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .at-preview{margin-top:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;
+    padding:14px;font-size:15px;line-height:2;font-weight:550}
+  .at-stats{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:8px}
+
+  footer{margin-top:28px;font-size:11px;color:var(--faint);line-height:1.7;text-align:center}
+  .pref-btn{margin-top:10px;font-family:var(--mono);font-size:10.5px;color:var(--faint);
+    background:none;border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer}
+  .pref-btn:hover{color:var(--sub)}
+
+  /* ---- 启动礼仪(§9.4):首访完整织线,再访短签名,可跳可关 ---- */
+  #qwIntro{position:fixed;inset:0;z-index:100;background:#141019;display:flex;
+    align-items:center;justify-content:center;overflow:hidden;transition:opacity .5s}
+  #qwIntro.bye{opacity:0;pointer-events:none}
+  #qwIntro .thread{position:absolute;left:-45%;width:42%;height:3px;border-radius:2px;
+    filter:drop-shadow(0 0 8px currentColor);animation:qwSweep 1s cubic-bezier(.3,.7,.3,1) forwards}
+  @keyframes qwSweep{to{left:105%}}
+  #qwIntro .mark{text-align:center;opacity:0;transform:translateY(10px) scale(.97);filter:blur(6px)}
+  #qwIntro.showmark .mark{opacity:1;transform:none;filter:blur(0);
+    transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1),filter .8s ease}
+  #qwIntro .mark h1{font-size:clamp(30px,8vw,44px);font-weight:800;letter-spacing:2px}
+  #qwIntro .mark h1 i{font-style:normal;color:var(--accent)}
+  #qwIntro .mark p{margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--faint)}
+  #qwIntro .mark .b6{display:flex;height:5px;border-radius:3px;overflow:hidden;margin:18px auto 0;width:180px}
+  #qwIntro .mark .b6 i{flex:1}
+  #qwIntro .skip{position:absolute;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));
+    font-family:var(--mono);font-size:11px;color:var(--faint);background:none;
+    border:1px solid var(--line);border-radius:100px;padding:7px 16px;cursor:pointer}
+  #qwIntro.short .thread{animation-duration:.55s}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header>
+  <div class="brand"><h1>色典</h1><span class="v">轻舞声衣 · 字词感情色彩对照标准 · 示例批</span></div>
+  <p class="tagline"><b>一部可以随时查询比对的字典伴侣,也是一支让数字文字穿上情感衣裳的画笔。</b>像字典标注读音,色典标注<b>感情色彩</b>:每个词条给出面色(情绪)与浓度基值,复合词另有心色与光影动词——点任何词条,看它的色、听它的和弦;贴入你的文字,让它替你上色。</p>
+</header>
+
+<section class="readout" id="readout">
+  <div class="ro-word idle" id="roWord">点下方任意词条开始查典</div>
+  <div class="ro-meta" id="roMeta"></div>
+</section>
+
+<div class="rules">
+  <b>读典法:</b>①色相=哪种情绪;②明暗=浓度(越亮越浓,0~1);③流速=急缓;④复合词=面色+心色+光影动词(光掠/晕染/暗涌/颤)。词条按<b>情绪部首</b>分部,复合词单列一部。
+</div>
+
+<section class="quiz">
+  <h2>看色识情 · 小测</h2>
+  <div class="q"><span class="blocks" id="qBlocks">██</span><span class="score" id="qScore">0 / 0</span></div>
+  <div class="opts" id="qOpts"></div>
+  <div class="verdict" id="qVerdict"></div>
+  <button class="next" id="qNext" hidden>下一题 →</button>
+  <p class="hint">遮住词义,只读颜色:凭色相与明暗判断这是哪种情绪、大约多浓。读得准,说明色典的编码是可读的。</p>
+</section>
+
+<section class="atelier">
+  <h2 class="at-title">着色工坊 —— 用色典给你的文字上色</h2>
+  <p class="at-desc">着色分<b>两相</b>:先<b>点相</b>——即时抓取情绪词逐个染色,无情绪字段不染色;整段意思表述完整、<b>情绪落地</b>后自动进入<b>面相</b>——整段染色,中性词在整段意义中获得自己的情绪位置。可手动切换两相对照,可导出 <b>Word / PDF / Markdown</b>(按当前相导出;纸面模式:浓=深,淡=浅;复合词=面色字+心色浅底)。</p>
+  <textarea id="atInput" spellcheck="false">夜很静,我一个人走着,心里有点孤单。忽然想起你的陪伴,泛起一点甜蜜,又有些说不出的酸楚。明天就要见面了,真让人盼望,又有点忐忑,只能强自镇定。</textarea>
+  <div class="at-actions">
+    <button class="at-btn main" id="atRun">着色</button>
+    <button class="at-btn ph" id="phDot" aria-pressed="false">点相·即时</button>
+    <button class="at-btn ph" id="phFull" aria-pressed="false">面相·落地</button>
+    <button class="at-btn" id="atWord" disabled>导出 Word</button>
+    <button class="at-btn" id="atPdf" disabled>导出 PDF</button>
+    <button class="at-btn" id="atMd" disabled>导出 MD</button>
+  </div>
+  <div class="at-preview" id="atPreview" hidden></div>
+  <p class="at-stats" id="atStats"></p>
+</section>
+
+<div id="book"></div>
+
+<footer>
+  轻舞声衣 · 色典(示例批)· 词条浓度为占位标定<br>
+  正式色典随情绪周期表版本化发行,色典版本号即读取解码器<br>
+  色彩与和弦均由算法实时生成,无版权素材<br>
+  <button class="pref-btn" id="introPref"></button>
+</footer>
+
+<script>
+"use strict";
+const EMO = {
+  calm: {label:"平静", h:165, s:49, flow:7,   chord:[48,60,64,67,71]},
+  hope: {label:"期待", h:98,  s:45, flow:3.5, chord:[50,62,67,69]},
+  warm: {label:"温暖", h:32,  s:66, flow:5.5, chord:[53,65,69,72,76]},
+  joy:  {label:"喜悦", h:43,  s:85, flow:2.2, chord:[43,55,67,71,74]},
+  sad:  {label:"忧伤", h:227, s:60, flow:8,   chord:[45,57,60,64]},
+  tense:{label:"紧张", h:14,  s:70, flow:1.4, chord:[47,59,62,65]},
+};
+const FXNAME={sweep:"光掠",bleed:"晕染",undertow:"暗涌",tremor:"颤"};
+function colHS(h,s,v){return "hsl("+h+","+(s*(0.45+0.55*v)).toFixed(0)+"%,"+(26+v*58).toFixed(0)+"%)";}
+function col(emo,v){const e=EMO[emo];return colHS(e.h,e.s,v);}
+function glow(emo,v){const e=EMO[emo];return "hsla("+e.h+","+e.s+"%,"+(50+v*20).toFixed(0)+"%,"+(v*v*0.85).toFixed(2)+")";}
+
+/* ============ 色典词条(示例批,浓度为占位标定) ============ */
+const BOOK = [
+ {emo:"calm", entries:[["淡然",.35],["平静",.4],["舒缓",.42],["平和",.45],["稳妥",.45],["安稳",.5],["恬静",.5],["闲适",.5],["安逸",.5],["安然无恙",.5],["安然",.55],["沉静",.55],["安宁",.55],["悠然",.55],["踏实",.55],["宁静",.6],["静谧",.6],["冷静",.6],["淡定",.6],["心安理得",.6],["风平浪静",.6],["安详",.62],["从容",.65],["泰然",.65],["镇定",.65],["悠然自得",.65],["无波无澜",.65],["岁月静好",.68],["坦然",.7],["心平气和",.7],["安之若素",.7],["神闲气定",.7],["气定神闲",.72],["静水流深",.72],["心静如水",.72],["心如止水",.75],["波澜不惊",.75],["泰然自若",.75],["处变不惊",.78],["释然",.8],["宠辱不惊",.8]]},
+ {emo:"hope", entries:[["念想",.5],["守候",.5],["指望",.55],["有盼头",.55],["希望",.6],["期许",.6],["期待",.62],["盼",.65],["心痒",.65],["拭目以待",.68],["心动",.7],["期盼",.7],["翘企",.7],["整装待发",.7],["企盼",.72],["神往",.72],["盼望",.75],["蓄势待发",.75],["心向往之",.75],["巴望",.75],["殷切",.75],["眼巴巴",.78],["向往",.8],["满怀希望",.8],["满心期待",.8],["求知若渴",.8],["引颈而望",.8],["摩拳擦掌",.82],["心驰神往",.82],["憧憬",.85],["翘首以盼",.85],["热望",.85],["朝思暮想",.85],["渴望",.88],["梦寐以求",.88],["望眼欲穿",.9],["跃跃欲试",.9],["迫不及待",.92]]},
+ {emo:"warm", entries:[["贴心",.5],["体贴",.55],["体己",.55],["温厚",.6],["陪伴",.6],["暖意",.6],["嘘寒问暖",.62],["关怀",.65],["惦记",.65],["温暖",.65],["关爱",.65],["暖心",.65],["温情",.68],["爱护",.68],["窝心",.68],["温柔",.7],["呵护",.7],["珍惜",.7],["温存",.7],["温言软语",.7],["相偎",.7],["亲密",.7],["相守",.72],["亲昵",.72],["依偎",.75],["心疼",.75],["怜爱",.75],["柔情",.75],["慈爱",.75],["疼惜",.78],["眷恋",.8],["珍爱",.8],["恩爱",.8],["情意绵绵",.8],["呵护备至",.8],["深情",.82],["相拥",.82],["疼爱",.85],["如沐春风",.85],["母爱",.85],["情深意长",.85],["相依为命",.88],["相濡以沫",.88],["拥抱",.9]]},
+ {emo:"joy",  entries:[["舒畅",.6],["愉快",.65],["欣然",.65],["神清气爽",.68],["愉悦",.68],["开心",.7],["高兴",.7],["甜丝丝",.7],["快活",.72],["乐呵呵",.72],["心旷神怡",.72],["得意",.72],["欢喜",.75],["快乐",.75],["喜悦",.75],["欢快",.75],["美滋滋",.75],["欢乐",.78],["喜滋滋",.78],["春风得意",.8],["甜蜜",.8],["欣喜",.8],["痛快",.8],["畅快",.85],["兴高采烈",.85],["眉飞色舞",.85],["喜上眉梢",.85],["笑逐颜开",.85],["兴奋",.85],["欢腾",.88],["酣畅淋漓",.88],["乐开花",.88],["雀跃",.9],["手舞足蹈",.9],["眉开眼笑",.9],["乐不可支",.9],["大喜过望",.9],["惊喜",.92],["喜出望外",.92],["欢呼雀跃",.92],["灿烂",.95],["心花怒放",.95],["欣喜若狂",.96]]},
+ {emo:"sad",  entries:[["惆怅",.55],["郁闷",.55],["低落",.58],["孤单",.6],["失落",.6],["忧郁",.6],["消沉",.6],["愁绪",.6],["惘然",.6],["忧愁",.62],["寂寥",.62],["哀愁",.65],["难过",.65],["黯然",.65],["忧伤",.65],["落寞",.65],["怅然若失",.68],["沮丧",.68],["孤寂",.68],["委屈",.7],["感伤",.7],["形单影只",.7],["辛酸",.72],["触景伤情",.72],["思念",.75],["物是人非",.75],["伤心",.75],["凄然",.75],["心酸",.75],["黯然神伤",.75],["睹物思人",.75],["遗憾",.78],["凄凉",.78],["哀伤",.78],["悲伤",.8],["悲凉",.8],["酸楚",.85],["哽咽",.85],["悲切",.85],["痛心",.85],["潸然泪下",.88],["哀痛",.88],["泪",.9],["悲痛",.9],["心如刀割",.95],["泣不成声",.95],["万念俱灰",.97],["心碎",.98],["肝肠寸断",.98]]},
+ {emo:"tense",entries:[["顾虑",.55],["欲言又止",.55],["不安",.6],["担心",.6],["局促",.6],["担忧",.65],["忧虑",.65],["局促不安",.68],["屏息",.7],["紧张",.7],["惴惴",.7],["忐忑",.72],["心神不宁",.72],["屏气敛息",.72],["七上八下",.75],["惴惴不安",.75],["焦虑",.75],["急躁",.75],["大气不敢出",.78],["心慌",.8],["坐立不安",.8],["手足无措",.8],["焦躁",.8],["心乱如麻",.8],["迫在眉睫",.8],["慌乱",.82],["如临大敌",.82],["慌张",.85],["提心吊胆",.85],["六神无主",.85],["战战兢兢",.85],["草木皆兵",.85],["如坐针毡",.88],["惊慌",.88],["心惊肉跳",.88],["大惊失色",.9],["火烧眉毛",.9],["焦灼",.92],["胆战心惊",.92],["惊慌失措",.92],["千钧一发",.92],["心急如焚",.95],["惊惶",.96]]},
+];
+const COMPOUND = [
+ ["口是心非",   "calm","tense","sweep",.6],
+ ["若无其事",   "calm","tense","undertow",.6],
+ ["甘苦自知",   "warm","sad","undertow",.6],
+ ["言不由衷",   "calm","sad","sweep",.62],
+ ["忍俊不禁",   "calm","joy","sweep",.65],
+ ["甜蜜的负担", "warm","tense","undertow",.65],
+ ["甜中带酸",   "warm","sad","bleed",.65],
+ ["故作轻松",   "calm","tense","sweep",.65],
+ ["虚惊一场",   "calm","tense","sweep",.65],
+ ["苦笑",       "joy","sad","sweep",.68],
+ ["哭笑不得",   "joy","tense","tremor",.7],
+ ["苦中带甜",   "sad","warm","bleed",.7],
+ ["患得患失",   "hope","tense","tremor",.7],
+ ["喜忧参半",   "joy","sad","bleed",.7],
+ ["强忍笑意",   "calm","joy","undertow",.7],
+ ["感慨万千",   "sad","warm","bleed",.7],
+ ["隐忍",       "calm","sad","undertow",.72],
+ ["百味杂陈",   "sad","warm","bleed",.75],
+ ["强自镇定",   "calm","tense","undertow",.78],
+ ["苦尽甘来",   "sad","warm","bleed",.78],
+ ["百感交集",   "sad","warm","bleed",.8],
+ ["破涕为笑",   "sad","joy","sweep",.8],
+ ["近乡情怯",   "hope","tense","tremor",.8],
+ ["相见恨晚",   "warm","sad","bleed",.8],
+ ["望穿秋水",   "hope","sad","bleed",.8],
+ ["受宠若惊",   "joy","tense","tremor",.8],
+ ["心有余悸",   "calm","tense","undertow",.8],
+ ["强颜欢笑",   "joy","sad","sweep",.82],
+ ["又惊又喜",   "joy","tense","tremor",.85],
+ ["悲欣交集",   "sad","joy","bleed",.85],
+ ["强忍泪水",   "calm","sad","undertow",.85],
+ ["百爪挠心",   "hope","tense","tremor",.85],
+ ["笑中带泪",   "joy","sad","sweep",.85],
+ ["惊魂未定",   "calm","tense","undertow",.85],
+ ["悲喜交加",   "sad","joy","bleed",.88],
+ ["强忍悲痛",   "calm","sad","undertow",.9],
+ ["喜极而泣",   "joy","sad","sweep",.95],
+];
+
+/* 渲染一个词 → 活字 HTML */
+function wordHTML(word, emo, v, sub, fx, big){
+  const e=EMO[emo];
+  let cls="ch", extra="";
+  let c, gc;
+  if(fx==="bleed" && sub){ c=null; }
+  if(fx==="sweep" && sub){
+    cls+=" fx-sweep";
+    extra='--c2:'+col(sub,Math.min(1,v+0.1))+';--gc2:'+glow(sub,Math.min(1,v+0.2))+
+          ';--sw:'+(EMO[sub].flow*0.8).toFixed(1)+'s;';
+  }else if(fx==="undertow" && sub){
+    cls+=" fx-undertow";
+    extra='--gc2:'+glow(sub,Math.min(1,v+0.25))+';--usp:'+(EMO[sub].flow*1.2).toFixed(1)+'s;';
+  }else if(fx==="tremor" && sub){
+    cls+=" fx-tremor";
+  }
+  const chars=[...word], n=chars.length;
+  return chars.map((chr,i)=>{
+    let cc, gcc;
+    if(fx==="bleed" && sub){
+      const m=n>1?i/(n-1):0, e2=EMO[sub];
+      let d=e2.h-e.h; if(d>180)d-=360; if(d<-180)d+=360;
+      const h=e.h+d*m, s=e.s+(e2.s-e.s)*m;
+      cc=colHS(h,s,v); gcc="hsla("+h.toFixed(0)+","+s.toFixed(0)+"%,60%,"+(v*0.7).toFixed(2)+")";
+    }else{ cc=col(emo,v); gcc=glow(emo,v); }
+    const lo=(1-0.10-0.28*v).toFixed(2), hi=(1+0.12+0.55*v).toFixed(2);
+    const gr=((big?1:0.6)*(6+16*v)).toFixed(0);
+    const ex2=(fx==="sweep"&&sub)?'--dl2:'+(-(i*0.13)).toFixed(2)+'s;':
+              (fx==="undertow"&&sub)?'--dl4:'+(-(i*0.05)).toFixed(2)+'s;':
+              (fx==="tremor"&&sub)?'--dl3:'+(-(i*0.07)%0.38).toFixed(2)+'s;':'';
+    return '<span class="'+cls+'" style="--c:'+cc+';--gc:'+gcc+';--gr:'+gr+'px;--lo:'+lo+';--hi:'+hi+
+           ';--sp:'+e.flow+'s;--dl:'+(-(i*0.09)).toFixed(2)+'s;'+extra+ex2+'">'+chr+'</span>';
+  }).join("");
+}
+
+/* ---------- 音频 ---------- */
+let ctx=null,master=null,voices=[];
+function ensureCtx(){
+  if(ctx) return;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  ctx=new AC();
+  master=ctx.createGain(); master.gain.value=0.9;
+  const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=2800;
+  master.connect(lp); lp.connect(ctx.destination);
+}
+function playChord(emo,v,gainMul){
+  ensureCtx(); if(ctx.state==="suspended") ctx.resume();
+  const t0=ctx.currentTime+0.03, dur=1.7, peak=(0.06+0.09*v)*(gainMul||1);
+  EMO[emo].chord.forEach(m=>{
+    const f=440*Math.pow(2,(m-69)/12);
+    const o1=ctx.createOscillator(); o1.type="triangle"; o1.frequency.value=f;
+    const o2=ctx.createOscillator(); o2.type="sine"; o2.frequency.value=f; o2.detune.value=-6;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.linearRampToValueAtTime(peak,t0+0.09);
+    g.gain.setValueAtTime(peak,t0+dur*0.45);
+    g.gain.exponentialRampToValueAtTime(0.0006,t0+dur);
+    o1.connect(g); o2.connect(g); g.connect(master);
+    o1.start(t0); o2.start(t0); o1.stop(t0+dur+0.06); o2.stop(t0+dur+0.06);
+    voices.push(o1,o2);
+  });
+}
+
+/* ---------- 读出卡 ---------- */
+function showEntry(word, emo, v, sub, fx){
+  const w=document.getElementById("roWord"), m=document.getElementById("roMeta");
+  w.className="ro-word";
+  w.innerHTML=wordHTML(word,emo,v,sub,fx,true);
+  const c=col(emo,0.8);
+  document.documentElement.style.setProperty("--accent",c);
+  document.documentElement.style.setProperty("--accent-soft","hsla("+EMO[emo].h+","+EMO[emo].s+"%,55%,.16)");
+  if(sub){
+    m.innerHTML='面色 <b>'+EMO[emo].label+'</b> × 心色 <b>'+EMO[sub].label+'</b> · <b>'+FXNAME[fx]+'</b> · 浓度 <b>'+v.toFixed(2)+'</b>';
+    playChord(emo,v,1); playChord(sub,v,0.38);
+  }else{
+    m.innerHTML='情绪 <b>'+EMO[emo].label+'</b> · 浓度 <b>'+v.toFixed(2)+'</b> · flow '+EMO[emo].flow+'s';
+    playChord(emo,v,1);
+  }
+  document.querySelectorAll(".entry.sel").forEach(el=>el.classList.remove("sel"));
+}
+
+/* ---------- 建部 ---------- */
+function buildBook(){
+  const host=document.getElementById("book"); host.innerHTML="";
+  BOOK.forEach(part=>{
+    const e=EMO[part.emo];
+    const sec=document.createElement("section"); sec.className="radical";
+    sec.innerHTML='<div class="rad-head"><span class="dot" style="background:'+col(part.emo,.8)+';box-shadow:0 0 10px '+col(part.emo,.8)+'"></span>'+
+      '<h2>'+e.label+'部</h2><span>'+part.entries.length+' 词 · key '+["C","D","F","G","Am","B"][["calm","hope","warm","joy","sad","tense"].indexOf(part.emo)]+'</span></div>'+
+      '<div class="entries"></div>';
+    const box=sec.querySelector(".entries");
+    part.entries.forEach(([word,v])=>{
+      const b=document.createElement("button"); b.className="entry";
+      b.innerHTML='<span class="w">'+wordHTML(word,part.emo,v,null,null,false)+'</span><span class="v">'+v.toFixed(2)+'</span>';
+      b.addEventListener("click",()=>{showEntry(word,part.emo,v); b.classList.add("sel");});
+      box.appendChild(b);
+    });
+    host.appendChild(sec);
+  });
+  const sec=document.createElement("section"); sec.className="radical";
+  sec.innerHTML='<div class="rad-head"><span class="dot" style="background:linear-gradient(135deg,#F0C24A,#7086DA)"></span>'+
+    '<h2>复合部</h2><span>'+COMPOUND.length+' 词 · 面色×心色·光影动词</span></div><div class="entries"></div>';
+  const box=sec.querySelector(".entries");
+  COMPOUND.forEach(([word,emo,sub,fx,v])=>{
+    const b=document.createElement("button"); b.className="entry";
+    b.innerHTML='<span class="w">'+wordHTML(word,emo,v,sub,fx,false)+'</span><span class="v">'+FXNAME[fx]+'</span>';
+    b.addEventListener("click",()=>{showEntry(word,emo,v,sub,fx); b.classList.add("sel");});
+    box.appendChild(b);
+  });
+  document.getElementById("book").appendChild(sec);
+}
+buildBook();
+
+/* ---------- 着色工坊:色典 = 文字着色小工具 ---------- */
+/* 词典:词 → {emo,v,sub,fx};最长匹配 */
+const DICT={};
+BOOK.forEach(p=>p.entries.forEach(([w,v])=>{DICT[w]={emo:p.emo,v};}));
+COMPOUND.forEach(([w,emo,sub,fx,v])=>{DICT[w]={emo,v,sub,fx};});
+const MAXLEN=Math.max(...Object.keys(DICT).map(w=>w.length));
+function tokenize(text){
+  const out=[]; let i=0;
+  while(i<text.length){
+    let hit=null;
+    for(let L=Math.min(MAXLEN,text.length-i);L>=1;L--){
+      const cand=text.substr(i,L);
+      if(DICT[cand]){hit=[cand,DICT[cand]];break;}
+    }
+    if(hit){out.push({t:hit[0],d:hit[1]});i+=hit[0].length;}
+    else{
+      if(out.length&&!out[out.length-1].d) out[out.length-1].t+=text[i];
+      else out.push({t:text[i],d:null});
+      i++;
+    }
+  }
+  return out;
+}
+/* 纸面模式(亮底):浓=深重,淡=浅淡;明度轴随底色反转 */
+function hslToHex(h,s,l){
+  s/=100;l/=100;
+  const k=n=>(n+h/30)%12, a=s*Math.min(l,1-l);
+  const f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));
+  return "#"+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,"0")).join("");
+}
+function paperColor(emo,v){const e=EMO[emo];return hslToHex(e.h,e.s*(0.5+0.5*v),74-v*38);}
+function paperTint(emo){const e=EMO[emo];return hslToHex(e.h,Math.min(70,e.s),90);}
+
+/* 点面两相:点相=情绪词即时染色,无情绪字段不染色;
+   面相=整段意思完整、情绪落地后全段染色,中性词取段内情绪位置 */
+let atSegs=null, atPhase="dot";
+function segmentize(text){
+  /* 按句末标点切段,段内再走词典最长匹配 */
+  const parts=text.split(/(?<=[。.!！?？;；\n])/);
+  return parts.filter(p=>p.length).map(p=>{
+    const toks=tokenize(p);
+    const hits=toks.filter(t=>t.d&&!t.d.sub);
+    /* 段情绪 = 典中词按浓度加权的主情绪;段浓度 = 典中词均值 */
+    const score={};
+    toks.filter(t=>t.d).forEach(t=>{score[t.d.emo]=(score[t.d.emo]||0)+t.d.v;});
+    const segEmo=Object.keys(score).sort((a,b)=>score[b]-score[a])[0]||null;
+    const segV=toks.filter(t=>t.d).length?
+      toks.filter(t=>t.d).reduce((a,t)=>a+t.d.v,0)/toks.filter(t=>t.d).length:0;
+    return {toks, segEmo, segV};
+  });
+}
+/* 中性词在面相中的情绪位置浓度(占位公式,待周期表定标) */
+function neutralV(segV){return Math.min(1,0.12+0.38*segV);}
+function renderPhase(){
+  const pv=document.getElementById("atPreview");
+  pv.innerHTML=atSegs.map(seg=>seg.toks.map(tk=>{
+    if(tk.d) return wordHTML(tk.t,tk.d.emo,tk.d.v,tk.d.sub||null,tk.d.fx||null,false);
+    if(atPhase==="dot"||!seg.segEmo)
+      return '<span style="color:var(--sub)">'+tk.t.replace(/\n/g,"<br>")+'</span>';
+    return wordHTML(tk.t.replace(/\n/g,""),seg.segEmo,neutralV(seg.segV),null,null,false)+(tk.t.includes("\n")?"<br>":"");
+  }).join("")).join("");
+  pv.hidden=false;
+  document.getElementById("phDot").setAttribute("aria-pressed",atPhase==="dot");
+  document.getElementById("phFull").setAttribute("aria-pressed",atPhase==="full");
+  const allToks=atSegs.flatMap(s=>s.toks);
+  const hits=allToks.filter(t=>t.d);
+  const chars=allToks.reduce((a,t)=>a+t.t.length,0), hitChars=hits.reduce((a,t)=>a+t.t.length,0);
+  document.getElementById("atStats").textContent = atPhase==="dot"
+    ? "点相·即时:典中情绪词 "+hits.length+" 个即时染色("+(chars?Math.round(hitChars/chars*100):0)+"%),无情绪字段不染色"
+    : "面相·落地:整段意思完整,"+atSegs.filter(s=>s.segEmo).length+" 段整段染色;中性词取段内情绪位置(无典中词的段保持墨色)";
+}
+function atRun(){
+  const text=document.getElementById("atInput").value;
+  atSegs=segmentize(text);
+  atPhase="dot"; renderPhase();
+  /* 情绪落地:1.6s 后自动过渡到面相(亦可手动切换两相对照) */
+  setTimeout(()=>{if(atPhase==="dot"){atPhase="full";renderPhase();}},1600);
+  ["atWord","atPdf","atMd"].forEach(id=>document.getElementById(id).disabled=false);
+}
+/* 导出用纸面 HTML(白底;按当前相导出;复合词=面色字+心色浅底) */
+function paperHTML(){
+  const body=atSegs.map(seg=>seg.toks.map(tk=>{
+    if(tk.d){
+      const c=paperColor(tk.d.emo,tk.d.v);
+      const bg=tk.d.sub?("background-color:"+paperTint(tk.d.sub)+";"):"";
+      return '<span style="color:'+c+';'+bg+'font-weight:600">'+tk.t+'</span>';
+    }
+    if(atPhase==="full"&&seg.segEmo)
+      return '<span style="color:'+paperColor(seg.segEmo,neutralV(seg.segV))+'">'+tk.t.replace(/\n/g,"<br>")+'</span>';
+    return tk.t.replace(/\n/g,"<br>");
+  }).join("")).join("");
+  return '<p style="font-family:PingFang SC,Microsoft YaHei,sans-serif;font-size:14pt;line-height:2">'+body+'</p>'+
+    '<p style="font-family:monospace;font-size:8pt;color:#999">轻舞声衣色典着色 · '+(atPhase==="dot"?"点相·即时":"面相·落地")+' · 纸面模式:浓=深 淡=浅 · 复合词=面色字+心色浅底 · 色典示例批</p>';
+}
+document.getElementById("phDot").addEventListener("click",()=>{if(atSegs){atPhase="dot";renderPhase();}});
+document.getElementById("phFull").addEventListener("click",()=>{if(atSegs){atPhase="full";renderPhase();}});
+function download(name,mime,content){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=name; a.click();
+}
+document.getElementById("atRun").addEventListener("click",atRun);
+document.getElementById("atWord").addEventListener("click",()=>{
+  download("轻舞声衣着色.doc","application/msword",
+    '<html><head><meta charset="utf-8"></head><body>'+paperHTML()+'</body></html>');
+});
+document.getElementById("atMd").addEventListener("click",()=>{
+  const md=atSegs.map(seg=>seg.toks.map(tk=>{
+    if(tk.d){
+      const c=paperColor(tk.d.emo,tk.d.v);
+      const bg=tk.d.sub?("background-color:"+paperTint(tk.d.sub)+";"):"";
+      return '<span style="color:'+c+';'+bg+'">'+tk.t+'</span>';
+    }
+    if(atPhase==="full"&&seg.segEmo)
+      return '<span style="color:'+paperColor(seg.segEmo,neutralV(seg.segV))+'">'+tk.t+'</span>';
+    return tk.t;
+  }).join("")).join("");
+  download("轻舞声衣着色.md","text/markdown",
+    md+"\n\n> 轻舞声衣色典着色 · "+(atPhase==="dot"?"点相·即时":"面相·落地")+"(HTML span 内联色,支持渲染 HTML 的 MD 阅读器)· 色典示例批\n");
+});
+document.getElementById("atPdf").addEventListener("click",()=>{
+  const w=window.open("","_blank");
+  if(!w){alert("请允许弹出窗口,或改用导出 Word");return;}
+  w.document.write('<html><head><meta charset="utf-8"><title>轻舞声衣着色</title></head><body>'+paperHTML()+
+    '<script>onload=function(){print()}<\/script></body></html>');
+  w.document.close();
+});
+
+/* ---------- 看色识情小测 ---------- */
+let qCur=null, qRight=0, qTotal=0, qDone=false;
+function quizNew(){
+  qDone=false;
+  document.getElementById("qVerdict").textContent="";
+  document.getElementById("qNext").hidden=true;
+  const part=BOOK[Math.floor(Math.random()*BOOK.length)];
+  const [word,v]=part.entries[Math.floor(Math.random()*part.entries.length)];
+  qCur={word,emo:part.emo,v};
+  const blocks=document.getElementById("qBlocks");
+  blocks.innerHTML=wordHTML("██",part.emo,v,null,null,true);
+  const opts=document.getElementById("qOpts"); opts.innerHTML="";
+  Object.keys(EMO).forEach(k=>{
+    const b=document.createElement("button"); b.className="opt"; b.textContent=EMO[k].label;
+    b.addEventListener("click",()=>quizAnswer(k,b));
+    opts.appendChild(b);
+  });
+}
+function quizAnswer(k,btn){
+  if(qDone) return; qDone=true; qTotal++;
+  const ok=k===qCur.emo;
+  if(ok){qRight++; btn.classList.add("right");}
+  else{
+    btn.classList.add("wrong");
+    [...document.querySelectorAll(".opt")].find(b=>b.textContent===EMO[qCur.emo].label).classList.add("right");
+  }
+  document.getElementById("qScore").textContent=qRight+" / "+qTotal;
+  document.getElementById("qVerdict").innerHTML=(ok?"✓ 读对了。":"✗ 差一点。")+
+    "这是 <b>"+qCur.word+"</b> —— "+EMO[qCur.emo].label+" · 浓度 "+qCur.v.toFixed(2);
+  playChord(qCur.emo,qCur.v,1);
+  document.getElementById("qNext").hidden=false;
+}
+document.getElementById("qNext").addEventListener("click",quizNew);
+quizNew();
+
+/* ---------- 启动礼仪(§9.4):首访完整织线,再访短签名 1.2s,可跳可关 ----------
+   自动播放的启动动画一律无声(浏览器自动播放策略 + 礼貌);声音签名只在
+   用户主动交互的场景(品牌页 tap-to-play、词条点击)出现。 */
+(function(){
+  const KEY_SEEN="qwsy_intro_seen", KEY_PREF="qwsy_intro_pref";
+  const COLORS=["#4FB8A6","#7FB85E","#E0A96B","#F0C24A","#7086DA","#E0704E"];
+  const prefBtn=document.getElementById("introPref");
+  const LBL={full:"启动动画:完整",short:"启动动画:简短",off:"启动动画:关"};
+  function pref(){return localStorage.getItem(KEY_PREF)||"full";}
+  function renderPref(){prefBtn.textContent=LBL[pref()];}
+  prefBtn.addEventListener("click",()=>{
+    const next={full:"short",short:"off",off:"full"}[pref()];
+    localStorage.setItem(KEY_PREF,next); renderPref();
+  });
+  renderPref();
+
+  if(pref()==="off") return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const firstVisit=!localStorage.getItem(KEY_SEEN);
+  const mode=(firstVisit&&pref()==="full")?"full":"short";
+
+  const ov=document.createElement("div");
+  ov.id="qwIntro"; if(mode==="short") ov.className="short";
+  ov.innerHTML='<div class="mark"><h1>轻舞<i>声衣</i> · 色典</h1>'+
+    '<p>VOICEWEAVE LEXICON</p>'+
+    '<div class="b6">'+COLORS.map(c=>'<i style="background:'+c+'"></i>').join("")+'</div></div>'+
+    (mode==="full"?'<button class="skip">跳过</button>':"");
+  document.body.appendChild(ov);
+  /* 六线依次织过(完整版逐线错峰,短版并行快扫) */
+  COLORS.forEach((c,i)=>{
+    const t=document.createElement("i");
+    t.className="thread"; t.style.background=c; t.style.color=c;
+    t.style.top=(38+i*4.6)+"%";
+    t.style.animationDelay=(mode==="full"?i*0.32:i*0.06)+"s";
+    ov.appendChild(t);
+  });
+  const tMark=mode==="full"?2400:450, tEnd=mode==="full"?5200:1250;
+  const timers=[setTimeout(()=>ov.classList.add("showmark"),tMark),
+                setTimeout(done,tEnd)];
+  function done(){
+    timers.forEach(clearTimeout);
+    ov.classList.add("bye");
+    setTimeout(()=>ov.remove(),520);
+    localStorage.setItem(KEY_SEEN,"1");
+  }
+  const sk=ov.querySelector(".skip");
+  if(sk) sk.addEventListener("click",done);
+})();
+</script>
+
+</html>

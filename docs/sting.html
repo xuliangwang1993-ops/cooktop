@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+<title>Voice Weave · Brand Animation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root{--bg:#141019;--txt:#EFEAF3;--sub:#A79FB4;--faint:#6C6379;
+    --ui:"Avenir Next","Helvetica Neue",Inter,system-ui,-apple-system,"PingFang SC",sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);overflow:hidden;font-family:var(--ui);
+    -webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none}
+  #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  canvas{position:absolute;inset:0;width:100%;height:100%}
+
+  .mark{position:relative;text-align:center;z-index:2;pointer-events:none}
+  .en-big{font-size:clamp(38px,10vw,66px);font-weight:800;letter-spacing:1px;color:var(--txt);
+    opacity:0;transform:translateY(14px) scale(.97);filter:blur(6px)}
+  .en-big i{font-style:normal;color:#4FB8A6;transition:color .5s}
+  .zh-small{font-size:clamp(13px,3.2vw,16px);letter-spacing:10px;color:var(--sub);
+    margin-top:14px;opacity:0;transform:translateY(10px)}
+  .slogan{font-family:var(--mono);font-size:clamp(12px,3vw,15px);color:var(--faint);letter-spacing:1.5px;
+    margin-top:26px;opacity:0}
+  .slogan .w{opacity:0;display:inline-block;transform:translateY(6px);filter:blur(3px)}
+  .shown .en-big{opacity:1;transform:none;filter:blur(0);
+    transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1),filter .9s ease}
+  .shown .zh-small{opacity:1;transform:none;transition:all .8s .25s ease}
+  .shown .slogan{opacity:1;transition:opacity .4s .5s}
+  .shown .slogan .w{opacity:1;transform:none;filter:blur(0);
+    transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1),filter .5s ease}
+
+  #start{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;gap:16px;
+    align-items:center;justify-content:center;cursor:pointer;background:var(--bg);transition:opacity .5s}
+  #start.gone{opacity:0;pointer-events:none}
+  .ring{width:74px;height:74px;border-radius:50%;border:1.5px solid #352C42;
+    display:flex;align-items:center;justify-content:center;position:relative}
+  .ring::after{content:"";position:absolute;inset:-1.5px;border-radius:50%;
+    border:1.5px solid #4FB8A6;clip-path:inset(0 0 74% 0);animation:spin 2.6s linear infinite}
+  .ring svg{margin-left:4px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #start p{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:3px}
+
+  #replay{position:fixed;bottom:calc(30px + env(safe-area-inset-bottom));left:50%;
+    transform:translateX(-50%);z-index:4;font-family:var(--mono);font-size:12px;color:var(--faint);
+    background:none;border:1px solid #352C42;border-radius:100px;padding:8px 20px;
+    letter-spacing:2px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .6s}
+  #replay.show{opacity:1;pointer-events:auto}
+  #replay:active{color:var(--sub)}
+  @media (prefers-reduced-motion:reduce){
+    .ring::after{animation:none}
+    .shown .en-big,.shown .zh-small,.shown .slogan,.shown .slogan .w{transition:none}
+  }
+</style>
+
+<div id="stage">
+  <canvas id="cv"></canvas>
+  <div class="mark" id="mark">
+    <div class="en-big">Voice <i id="weaveWord">Weave</i></div>
+    <div class="zh-small">轻舞声衣</div>
+    <div class="slogan" id="slogan"></div>
+  </div>
+</div>
+
+<button id="replay">REPLAY</button>
+
+<div id="start">
+  <div class="ring">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="#EFEAF3"><path d="M8 5v14l11-7z"/></svg>
+  </div>
+  <p>TAP TO BEGIN</p>
+</div>
+
+<script>
+"use strict";
+const COLORS=["#4FB8A6","#7FB85E","#E0A96B","#F0C24A","#7086DA","#E0704E"];
+const NOTES=[48,55,60,64,67,71];           // C G C E G B — Cmaj7 arpeggio, one note per thread
+const SLOGAN="Your words, in colour and sound.";
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const cv=document.getElementById("cv"),cx=cv.getContext("2d");
+const mark=document.getElementById("mark");
+const sloganEl=document.getElementById("slogan");
+const startEl=document.getElementById("start");
+const replayBtn=document.getElementById("replay");
+let W,H,dpr;
+function resize(){dpr=Math.min(devicePixelRatio||1,2);
+  W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);}
+resize();addEventListener("resize",resize);
+
+SLOGAN.split(" ").forEach((w,i,arr)=>{
+  const s=document.createElement("span");s.className="w";s.style.transitionDelay=(0.55+i*0.12)+"s";
+  s.textContent=w;sloganEl.appendChild(s);
+  if(i<arr.length-1)sloganEl.appendChild(document.createTextNode(" "));
+});
+
+let ctx=null,master=null;
+function audioInit(){
+  if(ctx)return;
+  const AC=window.AudioContext||window.webkitAudioContext;ctx=new AC();
+  master=ctx.createGain();master.gain.value=.9;
+  const lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=2600;lp.Q.value=.3;
+  const dl=ctx.createDelay(1);dl.delayTime.value=.27;
+  const fb=ctx.createGain();fb.gain.value=.24;
+  const wet=ctx.createGain();wet.gain.value=.18;
+  master.connect(lp);lp.connect(ctx.destination);
+  lp.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(wet);wet.connect(ctx.destination);
+}
+function note(m,t0,dur,peak){
+  const f=440*Math.pow(2,(m-69)/12);
+  const o1=ctx.createOscillator();o1.type="triangle";o1.frequency.value=f;
+  const o2=ctx.createOscillator();o2.type="sine";o2.frequency.value=f;o2.detune.value=-6;
+  const g=ctx.createGain();
+  g.gain.setValueAtTime(.0001,t0);
+  g.gain.linearRampToValueAtTime(peak,t0+.07);
+  g.gain.setValueAtTime(peak,t0+dur*.35);
+  g.gain.exponentialRampToValueAtTime(.0005,t0+dur);
+  o1.connect(g);o2.connect(g);g.connect(master);
+  o1.start(t0);o2.start(t0);o1.stop(t0+dur+.1);o2.stop(t0+dur+.1);
+}
+function playSting(){
+  audioInit();if(ctx.state==="suspended")ctx.resume();
+  const t=ctx.currentTime+.05;
+  NOTES.forEach((m,i)=>note(m,t+i*STAGGER,1.6,.075));
+  NOTES.forEach(m=>note(m,t+BLOOM,2.8,.11));
+  note(36,t+BLOOM,3.2,.05);
+}
+
+const STAGGER=.14, DRAW=1.1, BLOOM=STAGGER*5+DRAW*.66, SETTLE=BLOOM+.75;
+let t0=null,raf=null,idle=false;
+function ease(x){return x<0?0:x>1?1:1-Math.pow(1-x,3)}
+function draw(now){
+  if(t0===null)t0=now;
+  const T=(now-t0)/1000;
+  cx.clearRect(0,0,W,H);
+  const cy=H/2, amp0=Math.min(H*.16,90), bandGap=3.2, len=W;
+  for(let i=0;i<6;i++){
+    const local=T-i*STAGGER; if(local<=0)continue;
+    const prog=ease(local/DRAW);
+    const flat=ease((T-BLOOM)/(SETTLE-BLOOM));
+    const amp=amp0*(1-flat);
+    const yTarget=cy+(i-2.5)*bandGap*(flat)+(i-2.5)*(amp0*.34)*(1-flat);
+    const phase=i*1.13+T*(idle?0.5:0.9);
+    cx.beginPath();
+    const steps=90;
+    for(let s=0;s<=steps*prog;s++){
+      const x=(s/steps)*len;
+      const k=s/steps;
+      const env=Math.sin(Math.PI*k);
+      const y=yTarget+Math.sin(k*5.2+phase)*amp*env*(0.4+0.6*(1-flat))
+              +(idle?Math.sin(k*6+T*1.2+i)*1.6:0);
+      s===0?cx.moveTo(x,y):cx.lineTo(x,y);
+    }
+    cx.strokeStyle=COLORS[i];
+    cx.globalAlpha=.9-(flat*.15);
+    cx.lineWidth=2+(flat*0.6);
+    cx.lineCap="round";
+    cx.stroke();
+    cx.globalAlpha=1;
+  }
+  if(T>=BLOOM&&!mark.classList.contains("shown"))mark.classList.add("shown");
+  if(T>=SETTLE+1.6&&!idle){idle=true;replayBtn.classList.add("show");}
+  raf=requestAnimationFrame(draw);
+}
+function run(){
+  cancelAnimationFrame(raf);t0=null;idle=false;
+  mark.classList.remove("shown");replayBtn.classList.remove("show");
+  void mark.offsetWidth;
+  if(reduced){
+    mark.classList.add("shown");replayBtn.classList.add("show");
+    playSting();
+    cx.clearRect(0,0,W,H);
+    for(let i=0;i<6;i++){const y=H/2+(i-2.5)*3.2;
+      cx.strokeStyle=COLORS[i];cx.lineWidth=2.4;
+      cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();}
+    return;
+  }
+  playSting();
+  raf=requestAnimationFrame(draw);
+}
+startEl.addEventListener("click",()=>{startEl.classList.add("gone");run();});
+replayBtn.addEventListener("click",run);
+</script>
+
+</html>
