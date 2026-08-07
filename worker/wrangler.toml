@@ -1,6 +1,6 @@
-name = "cooktop-deepseek-proxy"
+name = "cooktop-kimi-proxy"
 main = "worker.js"
 compatibility_date = "2024-11-01"
 
-# No routes/vars needed. The DeepSeek key is set as a SECRET, not here:
-#   wrangler secret put DEEPSEEK_KEY
+# No routes/vars needed. The Kimi key is set as a SECRET, not here:
+#   wrangler secret put KIMI_KEY

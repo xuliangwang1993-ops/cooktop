@@ -202,7 +202,7 @@ html,body{margin:0;padding:0;background:#F5F4F1;height:100%;-webkit-font-smoothi
         </div>
       </div>
 
-      <!-- ===== Live DeepSeek transcript (real messages) ===== -->
+      <!-- ===== Live Kimi transcript (real messages) ===== -->
       <sc-for list="{{ liveMsgsView }}" as="lm" hint-placeholder-count="0">
         <sc-if value="{{ lm.isErr }}" hint-placeholder-val="{{ false }}">
           <div style="align-self:center;max-width:92%;font-size:12px;line-height:1.45;color:{{ dangerFg }};background:{{ dangerBg }};padding:8px 12px;border-radius:12px;font-weight:500;white-space:pre-wrap">{{ lm.text }}</div>
@@ -219,7 +219,7 @@ html,body{margin:0;padding:0;background:#F5F4F1;height:100%;-webkit-font-smoothi
           <div style="display:flex;gap:10px">
             <div style="width:30px;height:30px;border-radius:50%;background:{{ lm.avBg }};color:{{ lm.avFg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none">{{ lm.initial }}</div>
             <div style="min-width:0">
-              <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:13px;font-weight:650">ChatGPT Delegate · DeepSeek</span><span style="font-size:11px;color:var(--faint)">{{ lm.time }}</span></div>
+              <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:13px;font-weight:650">ChatGPT Delegate · Kimi K3</span><span style="font-size:11px;color:var(--faint)">{{ lm.time }}</span></div>
               <div style="font-size:14px;line-height:1.45;margin-top:4px;color:var(--txt);opacity:0.92;white-space:pre-wrap">{{ lm.text }}</div>
             </div>
           </div>
@@ -229,7 +229,7 @@ html,body{margin:0;padding:0;background:#F5F4F1;height:100%;-webkit-font-smoothi
       <sc-if value="{{ missionSending }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;gap:10px;align-items:center">
         <div style="width:30px;height:30px;border-radius:50%;background:{{ tintGnBg }};color:{{ tintGnFg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none">G</div>
-        <div style="font-size:13px;color:var(--sub);font-style:italic">DeepSeek delegate is thinking<span style="animation:ctPulse 1.2s infinite">…</span></div>
+        <div style="font-size:13px;color:var(--sub);font-style:italic">Kimi delegate is thinking<span style="animation:ctPulse 1.2s infinite">…</span></div>
       </div>
       </sc-if>
     </div>
@@ -604,11 +604,11 @@ html,body{margin:0;padding:0;background:#F5F4F1;height:100%;-webkit-font-smoothi
       </div>
     </div>
 
-    <div style="margin:24px 0 8px;font-size:12px;font-weight:650;color:var(--sub);letter-spacing:0.5px">DEEPSEEK (LIVE DELEGATE)</div>
+    <div style="margin:24px 0 8px;font-size:12px;font-weight:650;color:var(--sub);letter-spacing:0.5px">KIMI K3 (LIVE DELEGATE)</div>
     <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden">
       <div style="padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)">
         <div style="min-width:0;flex:1">
-          <div style="font-size:14px;font-weight:550">DeepSeek API key</div>
+          <div style="font-size:14px;font-weight:550">Kimi API key</div>
           <div style="font-size:12px;color:var(--sub);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ dsKeyStatus }}</div>
         </div>
         <span onclick="{{ setDsKey }}" style="font-size:12.5px;font-weight:650;color:var(--acfg);background:var(--acbg);padding:6px 12px;border-radius:100px;flex:none;cursor:pointer">{{ dsKeyBtn }}</span>
@@ -624,7 +624,7 @@ html,body{margin:0;padding:0;background:#F5F4F1;height:100%;-webkit-font-smoothi
         <span style="color:var(--faint)">›</span>
       </div>
     </div>
-    <div style="margin:8px 4px 0;font-size:11.5px;color:var(--faint);line-height:1.5">Your key is stored only in this browser (localStorage) and sent straight to DeepSeek. Use a Worker proxy for phones or if the browser is blocked by CORS.</div>
+    <div style="margin:8px 4px 0;font-size:11.5px;color:var(--faint);line-height:1.5">Your key is stored only in this browser (localStorage) and sent straight to Moonshot (Kimi). Use a Worker proxy for phones or if the browser is blocked by CORS.</div>
 
     <div style="margin:24px 0 8px;display:flex;align-items:baseline;gap:8px">
       <span style="font-size:12px;font-weight:650;color:var(--sub);letter-spacing:0.5px">PLUGINS</span>

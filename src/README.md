@@ -30,11 +30,15 @@ re-encodes the template exactly the way the original bundler does (every `/` esc
 `/`) — this matters: any other escaping renders the app with unresolved `{{ }}`
 bindings.
 
-## What the live-DeepSeek change added
+## What the live-delegate change added
 
-- `logic.js`: runtime DeepSeek key handling (localStorage `cooktop_deepseek_key`, never in
+The live delegate now runs on **Kimi K3** (Moonshot AI, endpoint
+`https://api.moonshot.cn/v1/chat/completions`, model `kimi-k3`); it originally shipped
+against DeepSeek.
+
+- `logic.js`: runtime Kimi key handling (localStorage `cooktop_kimi_key`, never in
   code), an optional Worker URL (`cooktop_worker_url`), and `sendMission()` which calls the
-  DeepSeek `chat/completions` API with the meeting context and appends the real reply.
+  Kimi `chat/completions` API with the meeting context and appends the real reply.
 - `template.html`: a real `<input>` in the Mission Room (was a static placeholder), a live
   transcript (`liveMsgsView`), a "thinking" indicator, and a Settings card to set/clear the
   key and Worker URL.
