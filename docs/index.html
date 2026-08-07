@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+<title>轻舞声衣 · 对外说明</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root{
+    --bg:#141019; --panel:#1E1926; --panel2:#261F30; --line:#352C42;
+    --txt:#EFEAF3; --sub:#A79FB4; --faint:#6C6379;
+    --accent:#4FB8A6; --accent-soft:rgba(79,184,166,.15);
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --ui:"PingFang SC","HarmonyOS Sans SC",system-ui,-apple-system,"Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--txt);font-family:var(--ui);-webkit-font-smoothing:antialiased}
+  body{max-width:560px;margin:0 auto;padding:0 22px calc(48px + env(safe-area-inset-bottom));line-height:1.75;font-size:15px}
+  .cap{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--faint);font-weight:600}
+  h2{font-size:19px;font-weight:700;letter-spacing:.3px;margin:0 0 12px;text-wrap:balance}
+  p{color:var(--sub)}
+  p b,p strong{color:var(--txt);font-weight:600}
+  section{margin-top:44px}
+  .mono{font-family:var(--mono)}
+
+  /* hero */
+  header{padding-top:calc(52px + env(safe-area-inset-top));text-align:left}
+  .band{display:flex;height:6px;border-radius:3px;overflow:hidden;margin-bottom:26px}
+  .band i{flex:1;transition:flex .6s ease}
+  .band i:hover{flex:2.4}
+  h1{font-size:34px;font-weight:800;letter-spacing:1px;line-height:1.25}
+  .tag{margin-top:10px;font-size:16px;color:var(--sub)}
+  .tag b{color:var(--accent);font-weight:600;transition:color .5s}
+  .hero-note{margin-top:18px;font-size:13px;color:var(--faint)}
+
+  /* demo */
+  .demo{background:linear-gradient(165deg,var(--panel2),var(--panel));border:1px solid var(--line);
+    border-radius:18px;padding:20px;margin-top:20px;position:relative;overflow:hidden}
+  .demo::before{content:"";position:absolute;inset:-30% -10% auto;height:110px;
+    background:radial-gradient(60% 100% at 50% 0%,var(--accent-soft),transparent 70%);pointer-events:none;transition:background .5s}
+  .demo .cap{position:relative}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative}
+  .chip{font-family:var(--ui);font-size:13.5px;font-weight:600;color:var(--sub);
+    background:var(--panel);border:1.5px solid var(--line);border-radius:100px;
+    padding:9px 16px;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:7px}
+  .chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .chip:active{transform:scale(.96)}
+  .chip[aria-pressed="true"]{color:var(--txt);border-color:var(--accent);background:var(--accent-soft)}
+  .readout{display:flex;align-items:baseline;gap:14px;margin-top:16px;position:relative}
+  .chordname{font-family:var(--mono);font-size:34px;font-weight:600;color:var(--txt);line-height:1;transition:color .3s}
+  .keyname{font-family:var(--mono);font-size:13px;color:var(--faint)}
+  .demo-hint{font-size:12px;color:var(--faint);margin-top:12px;position:relative}
+
+  /* metric cards */
+  .metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+  .metric{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .metric .big{font-family:var(--mono);font-size:24px;font-weight:650;letter-spacing:-.3px}
+  .metric .big small{font-size:13px;color:var(--faint);font-weight:400}
+  .metric .lbl{font-size:12px;color:var(--sub);margin-top:6px;line-height:1.5}
+  .metric.wide{grid-column:1 / -1}
+
+  /* principle rows */
+  .rows{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+  .row{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:13px;align-items:flex-start}
+  .row .n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700;padding-top:3px;flex:none;transition:color .5s}
+  .row .t{font-size:14px}
+  .row .t b{display:block;color:var(--txt);font-weight:650;margin-bottom:2px}
+  .row .t span{color:var(--sub);font-size:13px}
+
+  /* scenes */
+  .scenes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+  .scene{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .scene b{font-size:14px;font-weight:650;display:block}
+  .scene span{font-size:12.5px;color:var(--sub);line-height:1.55;display:block;margin-top:4px}
+
+  .loopline{margin-top:16px;background:var(--panel);border:1px dashed var(--line);border-radius:12px;
+    padding:12px 14px;font-family:var(--mono);font-size:12px;color:var(--sub);text-align:center;letter-spacing:.5px}
+
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--faint);line-height:1.8}
+  footer .st{color:var(--sub)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:380px){.metrics,.scenes{grid-template-columns:1fr}}
+</style>
+
+<header>
+  <div class="band" aria-hidden="true">
+    <i style="background:#4FB8A6"></i><i style="background:#7FB85E"></i><i style="background:#E0A96B"></i>
+    <i style="background:#F0C24A"></i><i style="background:#7086DA"></i><i style="background:#E0704E"></i>
+  </div>
+  <div class="cap">Voice Weave</div>
+  <h1>轻舞声衣</h1>
+  <p class="tag">给声音穿上<b id="tagWord">情绪</b>的衣裳。</p>
+  <p style="margin-top:4px;font-size:13px;color:var(--faint);letter-spacing:.4px">Your words, in colour and sound.</p>
+  <p class="hero-note">声纹电话内置的实时情绪音乐引擎 —— 通话时听出情绪,用音乐即刻呈现;越用,越懂你。</p>
+  <p class="hero-note" style="margin-top:8px;color:var(--sub)"><b style="color:var(--txt)">情绪的度量衡。</b>我们制定色盘如何划定、性格如何转化的标准 —— 让情绪波动从此有标准的测法,和标准的说法。</p>
+  <div class="chips" style="margin-top:18px">
+    <a class="chip" href="lexicon.html" style="text-decoration:none" aria-pressed="true">📖 色典 · 着色工坊</a>
+    <a class="chip" href="sting.html" style="text-decoration:none">🎞 品牌开场动画</a>
+  </div>
+</header>
+
+<section>
+  <h2>它做什么</h2>
+  <p>在声纹电话里,轻舞声衣<b>实时聆听通话中的情绪起伏</b>——语速、语调、话语的意思——并把它翻译成<b>和弦与色彩</b>:平静有平静的音色,喜悦有喜悦的调性;当情绪转变,音乐随之<b>转调衔接</b>,像一件随身形而动的衣裳。</p>
+  <p style="margin-top:10px">所有音乐由算法实时生成,<b>不使用任何版权音源</b>;所有分析在<b>手机端完成,原始语音不离开设备</b>。</p>
+
+  <div class="demo" id="demo">
+    <div class="cap">现场试听 · 点一个情绪</div>
+    <div class="chips" id="chips"></div>
+    <div class="readout">
+      <span class="chordname" id="chordName">Cmaj7</span>
+      <span class="keyname" id="keyName">key C · 平静</span>
+    </div>
+    <p class="demo-hint">音乐即刻合成——这就是通话中每一句话得到的处理。请开启媒体音量。</p>
+  </div>
+</section>
+
+<section>
+  <h2>它凭什么不同</h2>
+  <p>大多数系统等你说完才理解你。轻舞声衣的核心能力是<b>预判</b>:</p>
+  <div class="metrics">
+    <div class="metric wide">
+      <div class="big">话未说完,先懂三分</div>
+      <div class="lbl"><b>情绪预判力</b>:在一句话完成之前,提前 <span class="mono">L</span> 秒锁定情绪走势,命中率 <span class="mono">H%</span>。L 与 H 是我们对外承诺并持续公布的两个结果指标,随版本只升不降。</div>
+    </div>
+    <div class="metric">
+      <div class="big">越用越懂你</div>
+      <div class="lbl"><b>个人校准</b>:每个人表达情绪的方式不同。系统为每位用户建立专属档案,理解的准确度随使用持续提升,且提升幅度可量化。</div>
+    </div>
+    <div class="metric">
+      <div class="big">音乐先一步</div>
+      <div class="lbl"><b>预判式转调</b>:情绪转变尚未完成,音乐已先行过渡——你能亲耳听见算法的进步。</div>
+    </div>
+  </div>
+  <div class="loopline">实时聆听 → 完整语义复核 → 通话后全景复盘 → 误差自动回流 → 引擎持续进化</div>
+  <p style="margin-top:12px;font-size:13px">这套三层自校准闭环让每一通电话都让系统变得更好——<b>数据积累越深,理解越准</b>,这是我们最深的护城河。</p>
+</section>
+
+<section>
+  <h2>它是一套标准</h2>
+  <p>色彩不是装饰,是<b>可逆的编码</b>——每一个表达参数对应一个情绪数据元素,一一对应,无一多余:</p>
+  <div class="rows">
+    <div class="row"><span class="n">色相</span><div class="t"><b>= 哪种情绪</b><span>平静青绿、喜悦明黄、忧伤蓝紫……情绪各有其色。</span></div></div>
+    <div class="row"><span class="n">明暗</span><div class="t"><b>= 有多浓</b><span>浓的词亮得发光,淡的词沉入暗处——标注细到每一个词。</span></div></div>
+    <div class="row"><span class="n">流速</span><div class="t"><b>= 有多急</b><span>喜悦的色彩流得快,忧伤的色彩淌得慢。</span></div></div>
+    <div class="row"><span class="n">光影</span><div class="t"><b>= 复合情绪</b><span>强颜欢笑、苦中带甜、隐忍……面色之下,心色以光掠、晕染、暗涌、颤显形。</span></div></div>
+  </div>
+  <p style="margin-top:14px;font-size:13.5px">配套的<b>色典</b>公开发行:一部随时查询比对的字典伴侣,也是一支让数字文字穿上情感衣裳的画笔——按情绪部首收词,逐条标定感情色彩,并可直接为 <b>Word / PDF / Markdown</b> 文档着色。色典随版本发行,版本号即读取的解码器。</p>
+</section>
+
+<section>
+  <h2>你的声音,你的权利</h2>
+  <p>情绪档案是高度私密的数据。轻舞声衣从第一天起按三条原则设计:</p>
+  <div class="rows">
+    <div class="row"><span class="n">01</span><div class="t"><b>档案归你所有</b><span>我们是保管者,不是所有者。</span></div></div>
+    <div class="row"><span class="n">02</span><div class="t"><b>授权可携带</b><span>任何智能体要理解你,须经你逐项授权,逐笔留痕可查。</span></div></div>
+    <div class="row"><span class="n">03</span><div class="t"><b>随时可销毁</b><span>你可随时删除全部数据,销毁出具凭证、断开一切关联。</span></div></div>
+  </div>
+  <p style="margin-top:14px;font-size:13.5px">权利登记由独立机构 <b>soundtitle.org</b> 承担:为你的声音与档案提供<b>确权存证</b>——只登记权属与指纹,不保存数据本身;当声音在 AI 时代被冒用,在先登记是你手中最硬的<b>维权证据</b>。<span style="color:var(--faint)">(登记为存证与证据服务,非行政机关颁发的权利证书。)</span></p>
+</section>
+
+<section>
+  <h2>应用场景</h2>
+  <div class="scenes">
+    <div class="scene"><b>声纹电话 · 基础体验</b><span>来电即识人:响起属于那个人的和弦,通话全程情绪随乐而动。</span></div>
+    <div class="scene"><b>通话复盘</b><span>挂断后回看整通电话的情绪色带,重要的对话,值得被看见。</span></div>
+    <div class="scene"><b>SDK / API 授权</b><span>智能硬件、陪伴设备、客服系统,按设备或调用量接入。</span></div>
+    <div class="scene"><b>朗读与陪伴</b><span>为诗文朗读实时配乐,为陪伴场景提供有温度的声音层。</span></div>
+    <div class="scene"><b>色典 · 着色工坊</b><span>跨平台的文字着色小工具:按典为 Word / PDF / Markdown 文档上色,像输入法一样随处可用。</span></div>
+    <div class="scene"><b>情绪数据分析</b><span>表达即记录:每条色带都是可反解的情绪时间序列,为复盘与研究提供数字化路径。</span></div>
+    <div class="scene"><b>影视情绪字幕</b><span>字幕随人物语气着色,观众看台词即看见弦外之音;听障观众第一次能"看见"语气。</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>合作</h2>
+  <p>我们正在与云服务伙伴推进声纹与情绪链路的联合测试,并开放 <b>SDK 授权</b>与<b>场景共建</b>洽谈。引擎轻量、端侧运行、零版权负担,可快速嵌入任何带声音的产品。</p>
+</section>
+
+<footer>
+  <span class="st">轻舞声衣 Voice Weave</span> —— 给声音穿上情绪的衣裳 / Your words, in colour and sound.<br>
+  权利登记与存证:soundtitle.org · 原始语音不出设备 · 未经授权不分析、不留存<br>
+  本页内容为能力介绍,具体指标以双方测试验收数据为准。
+</footer>
+
+<script>
+"use strict";
+const EMO = [
+  {k:"calm", n:"平静", c:"#4FB8A6", soft:"rgba(79,184,166,.15)", key:"C",  chord:"Cmaj7", notes:[48,60,64,67,71]},
+  {k:"hope", n:"期待", c:"#7FB85E", soft:"rgba(127,184,94,.15)", key:"D",  chord:"Dsus4", notes:[50,62,67,69]},
+  {k:"warm", n:"温暖", c:"#E0A96B", soft:"rgba(224,169,107,.15)",key:"F",  chord:"Fmaj7", notes:[53,65,69,72,76]},
+  {k:"joy",  n:"喜悦", c:"#F0C24A", soft:"rgba(240,194,74,.15)", key:"G",  chord:"G",     notes:[43,55,67,71,74]},
+  {k:"sad",  n:"忧伤", c:"#7086DA", soft:"rgba(112,134,218,.15)",key:"Am", chord:"Am",    notes:[45,57,60,64]},
+  {k:"tense",n:"紧张", c:"#E0704E", soft:"rgba(224,112,78,.15)", key:"B",  chord:"Bdim",  notes:[47,59,62,65]},
+];
+let ctx=null;
+function play(notes){
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!ctx) ctx=new AC();
+  if(ctx.state==="suspended") ctx.resume();
+  const t0=ctx.currentTime+0.03, dur=1.9;
+  notes.forEach(m=>{
+    const f=440*Math.pow(2,(m-69)/12);
+    const o1=ctx.createOscillator(); o1.type="triangle"; o1.frequency.value=f;
+    const o2=ctx.createOscillator(); o2.type="sine"; o2.frequency.value=f; o2.detune.value=-6;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.linearRampToValueAtTime(0.13,t0+0.09);
+    g.gain.setValueAtTime(0.13,t0+dur*0.45);
+    g.gain.exponentialRampToValueAtTime(0.0006,t0+dur);
+    const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=2800;
+    o1.connect(g); o2.connect(g); g.connect(lp); lp.connect(ctx.destination);
+    o1.start(t0); o2.start(t0); o1.stop(t0+dur+0.05); o2.stop(t0+dur+0.05);
+  });
+}
+const chips=document.getElementById("chips");
+EMO.forEach((e,i)=>{
+  const b=document.createElement("button");
+  b.className="chip"; b.setAttribute("aria-pressed", i===0 ? "true":"false");
+  b.innerHTML='<i style="background:'+e.c+'"></i>'+e.n;
+  b.addEventListener("click",()=>{
+    document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true");
+    document.documentElement.style.setProperty("--accent",e.c);
+    document.documentElement.style.setProperty("--accent-soft",e.soft);
+    document.getElementById("chordName").textContent=e.chord;
+    document.getElementById("chordName").style.color=e.c;
+    document.getElementById("keyName").textContent="key "+e.key+" · "+e.n;
+    document.getElementById("tagWord").textContent=e.n;
+    play(e.notes);
+  });
+  chips.appendChild(b);
+});
+</script>
+
+</html>
